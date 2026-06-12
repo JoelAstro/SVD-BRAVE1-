@@ -58,15 +58,20 @@ const HeroSection: React.FC = () => {
                 <p className="text-xs text-white font-bold">11:00 AM - 11:00 PM</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-saffron">
+            <a 
+              href="tel:+919966315544" 
+              className="flex items-center gap-3 cursor-pointer group hover:scale-105 active:scale-95 transition-all duration-300 select-none text-left no-underline"
+              aria-label="Call Sri Vijaya Durga Restaurant for Orders and Catering at 9966315544"
+              title="Call Now"
+            >
+              <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-saffron group-hover:bg-saffron group-hover:text-maroon transition-colors duration-300">
                 <Phone className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-xs text-neutral-400 font-medium">Order / Catering</h4>
+                <h4 className="text-xs text-neutral-400 font-medium group-hover:text-saffron transition-colors duration-300">Order / Catering</h4>
                 <p className="text-xs text-white font-bold">9966315544</p>
               </div>
-            </div>
+            </a>
           </div>
 
         </div>
