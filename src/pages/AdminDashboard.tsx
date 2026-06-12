@@ -492,7 +492,7 @@ const AdminDashboard: React.FC = () => {
             <div className="lg:col-span-2 bg-white dark:bg-bg-dark border border-maroon/10 dark:border-saffron/10 rounded-3xl p-6 shadow-sm glass space-y-4">
               <h3 className="font-logo font-extrabold text-sm uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Real-Time Table Monitoring</h3>
               
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 gap-3">
                 {tables.map(t => {
                   let statusColor = 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-900/50 dark:text-emerald-400';
                   if (t.status === 'OCCUPIED') {
@@ -666,10 +666,8 @@ const AdminDashboard: React.FC = () => {
                 </button>
               ))}
             </div>
-          </div>
-
-          {/* Dishes Table */}
-          <div className="bg-white dark:bg-bg-dark border border-neutral-250 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm glass">
+                  {/* Dishes Table (desktop/tablet) */}
+          <div className="bg-white dark:bg-bg-dark border border-neutral-250 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm glass hidden md:block">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
@@ -744,7 +742,7 @@ const AdminDashboard: React.FC = () => {
                             </button>
                             <button 
                               onClick={() => handleDeleteDish(dish.id)}
-                              className="p-1.5 hover:bg-neutral-150 dark:hover:bg-neutral-800 rounded-lg text-neutral-550 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 transition-all"
+                              className="p-1.5 hover:bg-neutral-150 dark:hover:bg-neutral-800 rounded-lg text-neutral-550 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-450 transition-all"
                               title="Delete Dish"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -758,6 +756,86 @@ const AdminDashboard: React.FC = () => {
               </table>
             </div>
           </div>
+
+          {/* Dishes Card Grid (mobile only) */}
+          <div className="block md:hidden space-y-4">
+            {filteredMenuItems.length === 0 ? (
+              <div className="text-center py-10 bg-white dark:bg-bg-dark rounded-3xl border border-neutral-200 dark:border-neutral-800 text-neutral-450 italic text-xs glass">
+                No menu items match search query.
+              </div>
+            ) : (
+              filteredMenuItems.map(dish => (
+                <div 
+                  key={dish.id} 
+                  className={`bg-white dark:bg-bg-dark border rounded-2xl p-4 shadow-sm glass flex flex-col gap-3 transition-all ${
+                    dish.disabled ? 'border-neutral-200/50 dark:border-neutral-800/60 opacity-75' : 'border-neutral-200 dark:border-neutral-800'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <img 
+                      src={dish.image} 
+                      alt={dish.name} 
+                      className={`w-12 h-12 rounded-xl object-cover border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h5 className="font-logo font-bold text-xs text-neutral-850 dark:text-neutral-100 truncate">{dish.name}</h5>
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold uppercase tracking-wide flex-shrink-0 ${
+                          dish.type === 'veg' ? 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400'
+                        }`}>
+                          {dish.type}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-neutral-400 font-semibold mb-0.5">{dish.category}</p>
+                      <p className="text-[10px] text-neutral-400 line-clamp-2 leading-relaxed">{dish.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2.5 border-t border-neutral-150 dark:border-neutral-800/40">
+                    <span className="font-logo font-extrabold text-xs text-maroon dark:text-saffron">₹{dish.price}</span>
+                    
+                    <div className="flex items-center gap-3">
+                      {/* Availability toggle */}
+                      <button
+                        onClick={() => handleToggleDish(dish.id, !!dish.disabled)}
+                        className="focus:outline-none transition-transform active:scale-95 flex items-center gap-1 text-[10px] font-bold"
+                      >
+                        {dish.disabled ? (
+                          <>
+                            <ToggleLeft className="w-5 h-5 text-neutral-305 dark:text-neutral-700" />
+                            <span className="text-neutral-400">Disabled</span>
+                          </>
+                        ) : (
+                          <>
+                            <ToggleRight className="w-5 h-5 text-emerald-500" />
+                            <span className="text-emerald-600 dark:text-emerald-400">Enabled</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-0.5">
+                        <button 
+                          onClick={() => handleOpenEditDish(dish)}
+                          className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 transition-all"
+                          title="Edit"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteDish(dish.id)}
+                          className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-all"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>      </div>
         </div>
       )}
 
@@ -888,8 +966,8 @@ const AdminDashboard: React.FC = () => {
                 />
               </div>
 
-              {/* Table */}
-              <div className="bg-white dark:bg-bg-dark border border-neutral-255 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm glass">
+              {/* Table (desktop/tablet) */}
+              <div className="bg-white dark:bg-bg-dark border border-neutral-200 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm glass hidden md:block">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
@@ -935,6 +1013,57 @@ const AdminDashboard: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
+              </div>
+
+              {/* Invoices Card Grid (mobile only) */}
+              <div className="block md:hidden space-y-4">
+                {searchedInvoices.length === 0 ? (
+                  <div className="text-center py-10 bg-white dark:bg-bg-dark rounded-3xl border border-neutral-200 dark:border-neutral-800 text-neutral-450 italic text-xs glass">
+                    No invoices found matching search.
+                  </div>
+                ) : (
+                  searchedInvoices.map(inv => (
+                    <div 
+                      key={inv.invoiceNo} 
+                      className="bg-white dark:bg-bg-dark border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 shadow-sm glass flex flex-col gap-2.5 text-xs text-neutral-600 dark:text-neutral-300"
+                    >
+                      <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/60 pb-2">
+                        <span className="font-bold text-neutral-800 dark:text-neutral-150">{inv.invoiceNo}</span>
+                        <span className="text-[10px] text-neutral-400 font-semibold">{new Date(inv.timestamp).toLocaleDateString()}</span>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400 font-semibold">Customer:</span>
+                          <span className="font-bold text-neutral-800 dark:text-neutral-100">{inv.customerName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400 font-semibold">Table / Mode:</span>
+                          <span>{inv.tableNo === 'Takeaway' ? 'Takeaway' : `Table ${inv.tableNo}`}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-neutral-400 font-semibold">Payment Method:</span>
+                          <span className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 rounded text-[9px] font-bold">
+                            {inv.paymentMethod}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2.5 border-t border-neutral-100 dark:border-neutral-800/60">
+                        <div className="flex flex-col">
+                          <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">Total Amount</span>
+                          <span className="font-logo font-extrabold text-sm text-neutral-800 dark:text-neutral-100">₹{inv.total}</span>
+                        </div>
+                        <button
+                          onClick={() => setSelectedInvoice(inv)}
+                          className="p-2 px-4 bg-maroon text-white dark:bg-saffron dark:text-maroon rounded-xl font-bold text-xs shadow-md transition-all active:scale-95"
+                        >
+                          View Bill
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </>
           ) : (
