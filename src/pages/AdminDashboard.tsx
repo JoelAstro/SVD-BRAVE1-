@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import type { Invoice } from '../context/AppContext';
 import AuthGate from '../components/AuthGate';
+import ImageWithFallback from '../components/ImageWithFallback';
 import { 
   BarChart3, Users, DollarSign, ClipboardList, LogOut, Download, 
   Printer, QrCode, UtensilsCrossed, Star, Settings, Search, 
@@ -291,7 +292,7 @@ const AdminDashboard: React.FC = () => {
       category: dish.category,
       type: dish.type,
       description: dish.description || '',
-      image: dish.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=300'
+      image: dish.image ? dish.image.split('?')[0] : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=300'
     });
     setShowDishModal(true);
   };
@@ -303,26 +304,38 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
+    // Apply cache busting to the image URL to prevent browser caching stale images
+    let finalImageUrl = dishForm.image.trim();
+    if (finalImageUrl) {
+      const cleanUrl = finalImageUrl.split('?')[0];
+      finalImageUrl = `${cleanUrl}?v=${Date.now()}`;
+    }
+
+    const finalForm = {
+      ...dishForm,
+      image: finalImageUrl
+    };
+
     if (menuSubTab === 'dine-in') {
       if (editingDish) {
         // Modify existing
-        const updated = menuItems.map(m => m.id === editingDish.id ? { ...m, ...dishForm } : m);
+        const updated = menuItems.map(m => m.id === editingDish.id ? { ...m, ...finalForm } : m);
         updateMenu(updated);
       } else {
         // Add new
         const nextId = menuItems.length > 0 ? Math.max(...menuItems.map(m => m.id)) + 1 : 1;
-        const newDish = { id: nextId, ...dishForm, disabled: false };
+        const newDish = { id: nextId, ...finalForm, disabled: false };
         updateMenu([...menuItems, newDish]);
       }
     } else {
       if (editingDish) {
         // Modify existing
-        const updated = parcelItems.map(m => m.id === editingDish.id ? { ...m, ...dishForm } : m);
+        const updated = parcelItems.map(m => m.id === editingDish.id ? { ...m, ...finalForm } : m);
         updateParcelMenu(updated);
       } else {
         // Add new
         const nextId = parcelItems.length > 0 ? Math.max(...parcelItems.map(m => m.id)) + 1 : 201;
-        const newDish = { id: nextId, ...dishForm, disabled: false };
+        const newDish = { id: nextId, ...finalForm, disabled: false };
         updateParcelMenu([...parcelItems, newDish]);
       }
     }
@@ -694,10 +707,10 @@ const AdminDashboard: React.FC = () => {
                         }`}
                       >
                         <td className="p-4 flex items-center gap-3">
-                          <img 
+                          <ImageWithFallback 
                             src={dish.image} 
                             alt={dish.name} 
-                            className={`w-10 h-10 rounded-lg object-cover border border-neutral-200 dark:border-neutral-700 ${dish.disabled ? 'grayscale' : ''}`} 
+                            className={`w-10 h-10 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
                           />
                           <div>
                             <h5 className="font-bold text-neutral-850 dark:text-neutral-100">{dish.name}</h5>
@@ -772,10 +785,10 @@ const AdminDashboard: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <img 
+                    <ImageWithFallback 
                       src={dish.image} 
                       alt={dish.name} 
-                      className={`w-12 h-12 rounded-xl object-cover border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
+                      className={`w-12 h-12 rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">

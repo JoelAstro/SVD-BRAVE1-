@@ -506,7 +506,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ activeTab, setActiveTab
               <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">Browse our delicious printed offerings. Scan the table QR code to place orders instantly from your mobile phone!</p>
               <div className="max-w-md mx-auto rounded-3xl border border-neutral-300 dark:border-neutral-700 overflow-hidden shadow-lg bg-white dark:bg-neutral-900">
                 <img 
-                  src="./menu_card.jpg" 
+                  src="/menu_card.jpg" 
                   alt="Sri Vijaya Durga printed menu card cover"
                   className="w-full h-auto object-cover"
                 />

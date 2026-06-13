@@ -53,7 +53,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 230,
     category: "Veg Biryani",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Marinated cottage cheese chunks layered with slow-cooked biryani rice."
   },
   {
@@ -62,7 +62,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 270,
     category: "Veg Biryani",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Richly spiced paneer cubes cooked in cream and ghee layered with rice."
   },
   {
@@ -98,7 +98,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 260,
     category: "Veg Biryani",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Tandoor-grilled paneer tikka skewers layered with aromatic basmati rice."
   },
   {
@@ -145,7 +145,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 260,
     category: "Non-Veg Biryani",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Traditional Hyderabadi dum biryani with marinated chicken pieces."
   },
   {
@@ -172,7 +172,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 300,
     category: "Non-Veg Biryani",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "A rich mix of boneless chicken tikka cooked with saffron basmati rice."
   },
   {
@@ -181,7 +181,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 300,
     category: "Non-Veg Biryani",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Delicious dum biryani served with tandoori grilled chicken leg joints."
   },
   {
@@ -244,7 +244,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 300,
     category: "Non-Veg Biryani",
     type: "non-veg",
-    image: "./tandoori_chicken.png",
+    image: "/tandoori_chicken.png",
     description: "Premium claypot biryani served with clay-oven roasted chicken drumsticks."
   },
   {
@@ -307,7 +307,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 420,
     category: "Non-Veg Biryani",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "A royal combination of chicken, mutton, and prawns cooked with basmati."
   },
 
@@ -363,7 +363,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 230,
     category: "Veg Fried Rice",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Chinese style wok-tossed rice cooked with crispy paneer cubes."
   },
   {
@@ -493,7 +493,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 240,
     category: "Veg Starters",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Tender paneer strips cooked in yogurt, mint, green chillies, and curry leaves."
   },
   {
@@ -502,7 +502,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 220,
     category: "Veg Starters",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Paneer cubes tossed in classic soy-garlic Indo-Chinese manchurian sauce."
   },
   {
@@ -511,7 +511,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 220,
     category: "Veg Starters",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Deep-fried paneer cubes marinated in rich South Indian red spices."
   },
   {
@@ -612,7 +612,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 300,
     category: "Non-Veg Starters",
     type: "non-veg",
-    image: "./tandoori_chicken.png",
+    image: "/tandoori_chicken.png",
     description: "Hot and spicy dry chicken starter cooked in green chilli and curry leaves."
   },
   {
@@ -978,7 +978,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 260,
     category: "Tandoori Non-Veg",
     type: "non-veg",
-    image: "./tandoori_chicken.png",
+    image: "/tandoori_chicken.png",
     description: "Half chicken marinated in yogurt and tandoori spices, roasted in clay oven."
   },
   {
@@ -987,7 +987,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 520,
     category: "Tandoori Non-Veg",
     type: "non-veg",
-    image: "./tandoori_chicken.png",
+    image: "/tandoori_chicken.png",
     description: "Full chicken roasted in clay tandoor, served with mint chutney and onion rings."
   },
   {
@@ -996,7 +996,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 250,
     category: "Tandoori Non-Veg",
     type: "non-veg",
-    image: "./tandoori_chicken.png",
+    image: "/tandoori_chicken.png",
     description: "Chicken drumsticks marinated in rich spice paste and grilled inside tandoor."
   },
   {
@@ -1061,7 +1061,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 250,
     category: "Tandoori Veg",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Cottage cheese cubes marinated in rich cream, cashews, and cardamom and grilled."
   },
   {
@@ -1070,7 +1070,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 250,
     category: "Tandoori Veg",
     type: "veg",
-    image: "./paneer_tikka.png",
+    image: "/paneer_tikka.png",
     description: "Traditional clay-oven grilled paneer tikka skewered with tomatoes and onions."
   }
 ];
@@ -1083,7 +1083,7 @@ export const PARCEL_ITEMS: ParcelItem[] = [
     price: 360,
     category: "Couple Pack",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Aromatic Hyderabadi chicken dum biryani. Perfect portion for two people."
   },
   {
@@ -1157,7 +1157,7 @@ export const PARCEL_ITEMS: ParcelItem[] = [
     price: 630,
     category: "Family Pack",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Hyderabadi chicken dum biryani in family portion. Serves 3-4 people."
   },
   {
@@ -1202,7 +1202,7 @@ export const PARCEL_ITEMS: ParcelItem[] = [
     price: 700,
     category: "Family Pack",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Chef's special boneless chicken tikka family pack. Serves 3-4."
   },
   {
@@ -1222,7 +1222,7 @@ export const PARCEL_ITEMS: ParcelItem[] = [
     price: 700,
     category: "Bucket Biryani",
     type: "non-veg",
-    image: "./special_dum_biryani.png",
+    image: "/special_dum_biryani.png",
     description: "Traditional Hyderabadi chicken dum biryani served in a large take-out bucket. Serves 4-5."
   },
   {

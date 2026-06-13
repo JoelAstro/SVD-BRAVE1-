@@ -80,63 +80,68 @@ const AppContent: React.FC = () => {
           
           {/* Logo Area */}
           <div 
-            className="flex items-center gap-2 cursor-pointer select-none"
+            className="flex items-center gap-1.5 sm:gap-2 cursor-pointer select-none"
             onClick={() => navigateTo('#home')}
           >
-            <div className="w-10 h-10 rounded-full bg-maroon dark:bg-saffron flex items-center justify-center text-white dark:text-maroon shadow-md">
-              <UtensilsCrossed className="w-5 h-5 animate-pulse" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-maroon dark:bg-saffron flex items-center justify-center text-white dark:text-maroon shadow-md flex-shrink-0">
+              <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </div>
-            <div>
-              <h1 className="font-logo font-extrabold text-lg leading-tight text-maroon dark:text-saffron">Sri Vijaya Durga</h1>
-              <p className="text-xs uppercase tracking-widest text-saffron dark:text-maroon/70 font-semibold font-logo">Family AC Restaurant</p>
+            <div className="min-w-0">
+              <h1 className="font-logo font-extrabold text-sm sm:text-lg leading-tight text-maroon dark:text-saffron truncate">Sri Vijaya Durga</h1>
+              <p className="text-[9px] sm:text-xs uppercase tracking-widest text-saffron dark:text-maroon/70 font-semibold font-logo truncate hidden xs:block">Family AC Restaurant</p>
             </div>
           </div>
 
-          {/* Portal Switcher */}
-          <nav className="flex bg-neutral-200/50 dark:bg-neutral-800/50 p-1 rounded-full border border-neutral-300 dark:border-neutral-700 shadow-inner">
+          {/* Portal Switcher - Icon-based on mobile, text-based on tablet/desktop */}
+          <nav className="flex bg-neutral-250/60 dark:bg-neutral-800/60 p-1 rounded-full border border-neutral-300/50 dark:border-neutral-700/50 shadow-inner flex-shrink-0">
             <button 
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
                 currentView === 'customer' 
                   ? 'bg-maroon text-white dark:bg-saffron dark:text-maroon shadow-md' 
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-neutral-200'
               }`}
               onClick={() => navigateTo(activeTable ? `#menu?table=${activeTable}` : '#home')}
+              title="Customer Portal"
             >
-              Customer
+              <UtensilsCrossed className="w-3.5 h-3.5 sm:hidden" />
+              <span className="hidden sm:inline">Customer</span>
             </button>
             <button 
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all relative ${
+              className={`flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-semibold transition-all duration-200 relative ${
                 currentView === 'kitchen' 
                   ? 'bg-maroon text-white dark:bg-saffron dark:text-maroon shadow-md' 
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-neutral-200'
               }`}
               onClick={() => navigateTo('#kitchen')}
+              title="Kitchen Dashboard"
             >
               <ChefHat className="w-3.5 h-3.5" />
-              Kitchen
-              {kitchenSession && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500"></span>}
+              <span className="hidden sm:inline">Kitchen</span>
+              {kitchenSession && <span className="absolute top-0 right-0 sm:-top-1 sm:-right-1 w-2 h-2 rounded-full bg-emerald-500"></span>}
             </button>
             <button 
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all relative ${
+              className={`flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-semibold transition-all duration-200 relative ${
                 currentView === 'admin' 
                   ? 'bg-maroon text-white dark:bg-saffron dark:text-maroon shadow-md' 
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-850 dark:hover:text-neutral-200'
               }`}
               onClick={() => navigateTo('#admin')}
+              title="Admin Panel"
             >
               <ShieldAlert className="w-3.5 h-3.5" />
-              Admin
-              {adminSession && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500"></span>}
+              <span className="hidden sm:inline">Admin</span>
+              {adminSession && <span className="absolute top-0 right-0 sm:-top-1 sm:-right-1 w-2 h-2 rounded-full bg-emerald-500"></span>}
             </button>
           </nav>
 
           {/* Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <button 
-              className="p-2 rounded-full bg-neutral-200/50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 hover:text-saffron transition-all"
+              className="p-1.5 sm:p-2 rounded-full bg-neutral-200/50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 hover:text-saffron transition-all"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle Light/Dark Theme"
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {theme === 'dark' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
             </button>
           </div>
 
