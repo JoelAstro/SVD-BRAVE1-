@@ -1,0 +1,22 @@
+databases:
+  - name: restaurant-db
+    databaseName: restaurant
+    user: restaurant_user
+    plan: free
+
+services:
+  - type: web
+    name: sri-vijaya-durga-restaurant
+    env: node
+    plan: free
+    buildCommand: "npm install && npx prisma generate && npx prisma db push && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: POSTGRES_URL
+        fromDatabase:
+          name: restaurant-db
+          property: connectionString

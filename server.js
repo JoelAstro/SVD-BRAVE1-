@@ -58,10 +58,8 @@ const seedMenuIfEmpty = async () => {
 seedMenuIfEmpty();
 
 // --- MONGOOSE (MongoDB) INIT ---
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/svd_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('[MongoDB] Connected successfully'))
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/svd_db')
+  .then(() => console.log('[MongoDB] Connected successfully'))
   .catch(err => console.error('[MongoDB] Connection error:', err));
 
 
@@ -132,12 +130,16 @@ app.post('/api/orders', async (req, res) => {
 
     console.log(`[Order Saved] Order ${createdOrder.id} saved to PostgreSQL.`);
 
-    // Log to MongoDB
-    await ActivityLog.create({
-      id: 'ACT-' + Date.now(),
-      action: 'ORDER_CREATED',
-      details: { orderId: createdOrder.id, tableNo: createdOrder.tableNo }
-    });
+    // Log to MongoDB if online
+    if (mongoose.connection.readyState === 1) {
+      ActivityLog.create({
+        id: 'ACT-' + Date.now(),
+        action: 'ORDER_CREATED',
+        details: { orderId: createdOrder.id, tableNo: createdOrder.tableNo }
+      }).catch(err => console.warn('[MongoDB] Failed to log activity:', err.message));
+    } else {
+      console.log('[MongoDB] Offline, skipping activity log.');
+    }
 
     res.status(201).json({ message: 'Order created', order: newOrder });
 
@@ -190,22 +192,33 @@ app.put('/api/orders/:id', async (req, res) => {
 
     // Log to MongoDB history if status changed
     if (updates.status) {
-      await KitchenHistory.create({ orderId, status: updates.status });
-      
-      // If PAID, create notification in MongoDB
+      // Log to MongoDB if connected
+      if (mongoose.connection.readyState === 1) {
+        KitchenHistory.create({ orderId, status: updates.status })
+          .catch(err => console.warn('[MongoDB] Failed to log kitchen history:', err.message));
+      }
+
+      // If PAID, handle notification
       if (updates.status === 'PAID') {
         const notifId = 'NTF-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        const notification = await Notification.create({
+        const notificationData = {
           id: notifId,
           orderId: orderId,
           tableNo: updates.tableNo || 'N/A',
           customerName: updates.customerName || 'Customer',
-          amount: updates.amount || 0, // In reality, we'd calculate or receive this
+          amount: updates.amount || 0,
           timestamp: Date.now()
-        });
-        
+        };
+
+        // Persist to MongoDB if online
+        if (mongoose.connection.readyState === 1) {
+          Notification.create(notificationData)
+            .catch(err => console.warn('[MongoDB] Failed to log notification:', err.message));
+        }
+
+        // Always broadcast to active clients in real-time
         console.log(`[Realtime Events] Emitted new_notification for ${orderId}`);
-        io.emit('new_notification', notification);
+        io.emit('new_notification', notificationData);
       }
     }
 
