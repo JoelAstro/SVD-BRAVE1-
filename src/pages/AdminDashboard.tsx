@@ -700,167 +700,98 @@ const AdminDashboard: React.FC = () => {
                 </button>
               ))}
             </div>
-                  {/* Dishes Table (desktop/tablet) */}
-          <div className="bg-white dark:bg-bg-dark border border-neutral-250 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-sm glass hidden md:block">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-neutral-50 dark:bg-neutral-800/30 text-neutral-400 font-bold uppercase text-[9px] tracking-wider border-b border-neutral-200 dark:border-neutral-800">
-                    <th className="p-4">Dish</th>
-                    <th className="p-4">Category</th>
-                    <th className="p-4">Price</th>
-                    <th className="p-4">Type</th>
-                    <th className="p-4">Availability</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60 font-medium">
-                  {filteredMenuItems.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="text-center py-10 text-neutral-400 italic">No menu items match search query.</td>
-                    </tr>
-                  ) : (
-                    filteredMenuItems.map(dish => (
-                      <tr 
-                        key={dish.id} 
-                        className={`hover:bg-neutral-50/50 dark:hover:bg-neutral-850/20 transition-all ${
-                          dish.disabled ? 'bg-neutral-100/50 dark:bg-neutral-850/5 text-neutral-400' : ''
-                        }`}
-                      >
-                        <td className="p-4">
-                          <div className="flex items-center gap-3 w-full min-w-0">
-                            <ImageWithFallback 
-                              src={dish.image} 
-                              alt={dish.name} 
-                              className={`w-10 h-10 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
-                            />
-                            <div className="flex-1 min-w-0">
-                              <h5 className="font-bold text-neutral-850 dark:text-neutral-100 truncate w-full">{dish.name}</h5>
-                              <p className="text-[10px] text-neutral-400 line-clamp-1 w-full">{dish.description}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="p-4 text-neutral-600 dark:text-neutral-300 font-semibold">{dish.category}</td>
-                        <td className="p-4 font-logo font-extrabold text-neutral-800 dark:text-neutral-100">₹{dish.price}</td>
-                        <td className="p-4">
-                          <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
-                            dish.type === 'veg' ? 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400'
-                          }`}>
-                            {dish.type}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          <button
-                            onClick={() => handleToggleDish(dish.id, !!dish.disabled)}
-                            className="focus:outline-none transition-transform active:scale-95"
-                          >
-                            {dish.disabled ? (
-                              <div className="flex items-center gap-1.5 text-neutral-450 dark:text-neutral-500 font-semibold">
-                                <ToggleLeft className="w-6 h-6 text-neutral-300 dark:text-neutral-700" />
-                                <span>Disabled</span>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
-                                <ToggleRight className="w-6 h-6 text-emerald-500" />
-                                <span>Enabled</span>
-                              </div>
-                            )}
-                          </button>
-                        </td>
-                        <td className="p-4 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button 
-                              onClick={() => handleOpenEditDish(dish)}
-                              className="p-1.5 hover:bg-neutral-150 dark:hover:bg-neutral-800 rounded-lg text-neutral-550 dark:text-neutral-400 hover:text-maroon dark:hover:text-saffron transition-all"
-                              title="Edit Dish"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteDish(dish.id)}
-                              className="p-1.5 hover:bg-neutral-150 dark:hover:bg-neutral-800 rounded-lg text-neutral-550 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-450 transition-all"
-                              title="Delete Dish"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
           </div>
 
-          {/* Dishes Card Grid (mobile only) */}
-          <div className="block md:hidden space-y-4">
+          {/* Dishes Responsive Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {filteredMenuItems.length === 0 ? (
-              <div className="text-center py-10 bg-white dark:bg-bg-dark rounded-3xl border border-neutral-200 dark:border-neutral-800 text-neutral-450 italic text-xs glass">
+              <div className="col-span-full text-center py-12 bg-white dark:bg-bg-dark rounded-3xl border border-neutral-200 dark:border-neutral-800 text-neutral-450 italic text-xs glass">
                 No menu items match search query.
               </div>
             ) : (
               filteredMenuItems.map(dish => (
                 <div 
                   key={dish.id} 
-                  className={`bg-white dark:bg-bg-dark border rounded-2xl p-4 shadow-sm glass flex flex-col gap-3 transition-all ${
-                    dish.disabled ? 'border-neutral-200/50 dark:border-neutral-800/60 opacity-75' : 'border-neutral-200 dark:border-neutral-800'
+                  className={`bg-white dark:bg-bg-dark border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative group ${
+                    dish.disabled 
+                      ? 'border-neutral-200/50 dark:border-neutral-800/60 opacity-75' 
+                      : 'border-neutral-250 dark:border-neutral-800'
                   }`}
                 >
-                  <div className="flex items-start gap-3">
+                  {/* Photo area with aspect ratio */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-105 dark:bg-neutral-850">
                     <ImageWithFallback 
                       src={dish.image} 
                       alt={dish.name} 
-                      className={`w-12 h-12 rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
+                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${dish.disabled ? 'grayscale filter' : ''}`} 
                     />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <h5 className="font-logo font-bold text-xs text-neutral-850 dark:text-neutral-100 truncate">{dish.name}</h5>
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold uppercase tracking-wide flex-shrink-0 ${
-                          dish.type === 'veg' ? 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400'
-                        }`}>
-                          {dish.type}
+                    
+                    {/* Floating category badge (top left) */}
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-wider bg-black/55 text-white backdrop-blur-sm">
+                      {dish.category}
+                    </span>
+
+                    {/* Floating type badge (top right) */}
+                    <span className={`absolute top-2 right-2 px-2 py-0.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wide backdrop-blur-sm border ${
+                      dish.type === 'veg' 
+                        ? 'bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30' 
+                        : 'bg-red-500/20 text-red-700 dark:text-red-400 border-red-500/30'
+                    }`}>
+                      {dish.type}
+                    </span>
+
+                    {/* Disabled overlay */}
+                    {dish.disabled && (
+                      <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center">
+                        <span className="bg-red-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-full shadow-md uppercase tracking-wider">
+                          Unavailable
                         </span>
                       </div>
-                      <p className="text-[10px] text-neutral-400 font-semibold mb-0.5">{dish.category}</p>
-                      <p className="text-[10px] text-neutral-400 line-clamp-2 leading-relaxed">{dish.description}</p>
-                    </div>
+                    )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2.5 border-t border-neutral-150 dark:border-neutral-800/40">
-                    <span className="font-logo font-extrabold text-xs text-maroon dark:text-saffron">₹{dish.price}</span>
+                  {/* Info details */}
+                  <div className="p-3.5 flex flex-col flex-1 min-w-0">
+                    <h5 className="font-logo font-bold text-xs md:text-sm text-neutral-850 dark:text-neutral-100 truncate w-full mb-1">
+                      {dish.name}
+                    </h5>
+                    <p className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-400 line-clamp-2 leading-relaxed flex-1 mb-3">
+                      {dish.description}
+                    </p>
                     
-                    <div className="flex items-center gap-3">
-                      {/* Availability toggle */}
-                      <button
-                        onClick={() => handleToggleDish(dish.id, !!dish.disabled)}
-                        className="focus:outline-none transition-transform active:scale-95 flex items-center gap-1 text-[10px] font-bold"
-                      >
-                        {dish.disabled ? (
-                          <>
-                            <ToggleLeft className="w-5 h-5 text-neutral-305 dark:text-neutral-700" />
-                            <span className="text-neutral-400">Disabled</span>
-                          </>
-                        ) : (
-                          <>
-                            <ToggleRight className="w-5 h-5 text-emerald-500" />
-                            <span className="text-emerald-600 dark:text-emerald-400">Enabled</span>
-                          </>
-                        )}
-                      </button>
+                    {/* Controls & price footer */}
+                    <div className="pt-3 border-t border-neutral-150 dark:border-neutral-800/40 flex items-center justify-between mt-auto">
+                      <span className="font-logo font-extrabold text-sm text-maroon dark:text-saffron">
+                        ₹{dish.price}
+                      </span>
+                      
+                      <div className="flex items-center gap-2">
+                        {/* Toggle availability */}
+                        <button
+                          onClick={() => handleToggleDish(dish.id, !!dish.disabled)}
+                          className="focus:outline-none transition-transform active:scale-95 flex items-center"
+                          title={dish.disabled ? "Enable Dish" : "Disable Dish"}
+                        >
+                          {dish.disabled ? (
+                            <ToggleLeft className="w-6 h-6 text-neutral-300 dark:text-neutral-700 hover:text-neutral-400" />
+                          ) : (
+                            <ToggleRight className="w-6 h-6 text-emerald-500 hover:text-emerald-600" />
+                          )}
+                        </button>
 
-                      {/* Actions */}
-                      <div className="flex items-center gap-0.5">
+                        {/* Edit Button */}
                         <button 
                           onClick={() => handleOpenEditDish(dish)}
-                          className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 transition-all"
+                          className="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-maroon dark:hover:text-saffron transition-all"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
+                        
+                        {/* Delete Button */}
                         <button 
                           onClick={() => handleDeleteDish(dish.id)}
-                          className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-all"
+                          className="p-1 hover:bg-neutral-150 dark:hover:bg-neutral-800 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-all"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -871,7 +802,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
               ))
             )}
-          </div>      </div>
+          </div>
         </div>
       )}
 
