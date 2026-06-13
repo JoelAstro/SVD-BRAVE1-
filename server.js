@@ -2,68 +2,62 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
+import mongoose from 'mongoose';
+import { Notification, ActivityLog, KitchenHistory } from './models/mongo.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 
-// Enable CORS
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] }));
 app.use(express.json());
 
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
+const io = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 
-const DB_FILE = path.join(__dirname, 'orders.json');
+// --- PRISMA (PostgreSQL) INIT ---
+const prisma = new PrismaClient();
 
-// Initialize Database if doesn't exist
-if (!fs.existsSync(DB_FILE)) {
-  fs.writeFileSync(DB_FILE, JSON.stringify([]));
-  console.log('[Database] Initialized empty orders.json');
-}
+// --- MONGOOSE (MongoDB) INIT ---
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/svd_db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log('[MongoDB] Connected successfully'))
+  .catch(err => console.error('[MongoDB] Connection error:', err));
 
-// Helper to read/write DB
-const readDB = () => {
-  try {
-    const data = fs.readFileSync(DB_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('[Error] Failed to read database:', err);
-    return [];
-  }
-};
 
-const writeDB = (data) => {
-  try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error('[Error] Failed to write to database:', err);
-  }
-};
-
-// --- API ENDPOINTS ---
+// --- API ENDPOINTS (PostgreSQL) ---
 
 // Fetch all active orders
-app.get('/api/orders', (req, res) => {
-  const orders = readDB();
-  console.log('[Database Response] Fetched all orders.');
-  res.json(orders);
+app.get('/api/orders', async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: { items: true },
+    });
+    // Convert to frontend expected format
+    const formattedOrders = orders.map(o => ({
+      ...o,
+      items: o.items.map(i => ({
+        id: i.menuItemId,
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity,
+        isAdditional: i.isAdditional,
+        addedAt: i.addedAt,
+      }))
+    }));
+    res.json(formattedOrders);
+  } catch (err) {
+    console.error('[Error] GET /api/orders:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Create new order
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', async (req, res) => {
   console.log('[Order Created] Received new order request');
   const newOrder = req.body;
   
@@ -71,62 +65,149 @@ app.post('/api/orders', (req, res) => {
     return res.status(400).json({ error: 'Invalid order data' });
   }
 
-  const orders = readDB();
-  orders.push(newOrder);
-  writeDB(orders);
+  try {
+    const createdOrder = await prisma.order.create({
+      data: {
+        id: newOrder.id,
+        tableNo: newOrder.tableNo,
+        customerName: newOrder.customerName || '',
+        customerPhone: newOrder.customerPhone || '',
+        status: newOrder.status,
+        timestamp: newOrder.timestamp,
+        isParcel: newOrder.isParcel || false,
+        specialNotes: newOrder.specialNotes,
+        pickupTime: newOrder.pickupTime,
+        items: {
+          create: newOrder.items.map(i => ({
+            menuItemId: i.id,
+            name: i.name,
+            price: i.price,
+            quantity: i.quantity,
+            isAdditional: i.isAdditional || false,
+            addedAt: i.addedAt,
+          }))
+        }
+      },
+      include: { items: true }
+    });
 
-  console.log(`[Order Saved] Order ${newOrder.id} saved to database.`);
+    console.log(`[Order Saved] Order ${createdOrder.id} saved to PostgreSQL.`);
 
-  // Emit real-time event
-  io.emit('new_order', newOrder);
-  console.log(`[Realtime Events] Emitted new_order for ${newOrder.id}`);
+    // Log to MongoDB
+    await ActivityLog.create({
+      id: 'ACT-' + Date.now(),
+      action: 'ORDER_CREATED',
+      details: { orderId: createdOrder.id, tableNo: createdOrder.tableNo }
+    });
 
-  res.status(201).json({ message: 'Order created successfully', order: newOrder });
+    io.emit('new_order', newOrder); // Emit the exact payload the frontend sent
+    res.status(201).json({ message: 'Order created', order: newOrder });
+
+  } catch (err) {
+    console.error('[Error] POST /api/orders:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-// Update an order (e.g. status change)
-app.put('/api/orders/:id', (req, res) => {
+// Update order (e.g. status change, adding items)
+app.put('/api/orders/:id', async (req, res) => {
   const orderId = req.params.id;
   const updates = req.body;
   
-  const orders = readDB();
-  const orderIndex = orders.findIndex(o => o.id === orderId);
+  try {
+    // Determine if we are updating items or just status
+    if (updates.items) {
+      // Clear existing items and recreate
+      await prisma.orderItem.deleteMany({ where: { orderId } });
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          status: updates.status,
+          timestamp: updates.timestamp,
+          specialNotes: updates.specialNotes,
+          items: {
+            create: updates.items.map(i => ({
+              menuItemId: i.id,
+              name: i.name,
+              price: i.price,
+              quantity: i.quantity,
+              isAdditional: i.isAdditional || false,
+              addedAt: i.addedAt,
+            }))
+          }
+        }
+      });
+    } else {
+      // Just updating fields like status
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status: updates.status, timestamp: updates.timestamp }
+      });
+    }
 
-  if (orderIndex === -1) {
-    return res.status(404).json({ error: 'Order not found' });
+    console.log(`[Database Response] Order ${orderId} updated in PostgreSQL.`);
+
+    // Log to MongoDB history if status changed
+    if (updates.status) {
+      await KitchenHistory.create({ orderId, status: updates.status });
+      
+      // If PAID, create notification in MongoDB
+      if (updates.status === 'PAID') {
+        const notifId = 'NTF-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        const notification = await Notification.create({
+          id: notifId,
+          orderId: orderId,
+          tableNo: updates.tableNo || 'N/A',
+          customerName: updates.customerName || 'Customer',
+          amount: updates.amount || 0, // In reality, we'd calculate or receive this
+          timestamp: Date.now()
+        });
+        
+        console.log(`[Realtime Events] Emitted new_notification for ${orderId}`);
+        io.emit('new_notification', notification);
+      }
+    }
+
+    io.emit('order_updated', updates);
+    res.json({ message: 'Order updated', order: updates });
+
+  } catch (err) {
+    console.error('[Error] PUT /api/orders/:id:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  orders[orderIndex] = { ...orders[orderIndex], ...updates };
-  writeDB(orders);
-
-  console.log(`[Database Response] Order ${orderId} updated.`);
-
-  // Emit real-time event
-  io.emit('order_updated', orders[orderIndex]);
-  console.log(`[Realtime Events] Emitted order_updated for ${orderId}`);
-
-  res.json({ message: 'Order updated successfully', order: orders[orderIndex] });
 });
 
-// Sync completely (if client sends full orders list, though discouraged, keep for compatibility if needed)
-app.post('/api/orders/sync', (req, res) => {
-  const updatedOrders = req.body;
-  writeDB(updatedOrders);
-  console.log('[Database Response] Database forcefully synchronized with provided orders array.');
-  io.emit('orders_synced', updatedOrders);
-  res.json({ message: 'Synced successfully' });
+// Sync (For Bulk updates / existing logic compatibility)
+app.post('/api/orders/sync', async (req, res) => {
+  // If the frontend tries to sync completely, we just broadcast to keep devices in sync
+  io.emit('orders_synced', req.body);
+  res.json({ message: 'Sync broadcasted' });
 });
 
 
-// --- SOCKET.IO HANDLING ---
+// --- SOCKET.IO ---
 io.on('connection', (socket) => {
   console.log(`[Realtime Events] Client connected: ${socket.id}`);
   
-  // Kitchen Fetch Response simulator
-  socket.on('request_orders', () => {
-    const orders = readDB();
-    console.log(`[Kitchen Fetch Response] Sending orders to ${socket.id}`);
-    socket.emit('initial_orders', orders);
+  // Kitchen Fetch Response
+  socket.on('request_orders', async () => {
+    try {
+      const orders = await prisma.order.findMany({ include: { items: true } });
+      const formattedOrders = orders.map(o => ({
+        ...o,
+        items: o.items.map(i => ({
+          id: i.menuItemId,
+          name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+          isAdditional: i.isAdditional,
+          addedAt: i.addedAt,
+        }))
+      }));
+      socket.emit('initial_orders', formattedOrders);
+    } catch (err) {
+      console.error('[Error] Fetching initial orders via socket:', err);
+    }
   });
 
   socket.on('disconnect', () => {
@@ -136,5 +217,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`[Server] Backend running on port ${PORT}`);
+  console.log(`[Server] Production Backend running on port ${PORT}`);
 });

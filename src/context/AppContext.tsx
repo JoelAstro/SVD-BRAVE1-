@@ -234,9 +234,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const socketRef = React.useRef<any>(null);
 
   useEffect(() => {
-    socketRef.current = io('http://localhost:3000');
+    socketRef.current = io(`http://${window.location.hostname}:3000`);
     
-    fetch('http://localhost:3000/api/orders')
+    fetch(`http://${window.location.hostname}:3000/api/orders`)
       .then(res => res.json())
       .then(data => {
         console.log('[Kitchen Fetch Response] Loaded initial orders from backend');
@@ -259,6 +259,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     socketRef.current.on('orders_synced', (syncedOrders: Order[]) => {
       setOrders(syncedOrders);
+    });
+
+    socketRef.current.on('new_notification', (notification: PaymentNotification) => {
+      console.log('[Realtime Events] Received new_notification:', notification.id);
+      setPaymentNotifications(prev => {
+        if (!prev.find(n => n.id === notification.id)) return [notification, ...prev];
+        return prev;
+      });
     });
 
     return () => {
@@ -375,7 +383,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (updated) {
         localStorage.setItem('svd_tables', JSON.stringify(newTables));
-        fetch('http://localhost:3000/api/orders/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsedOrders) });
+        fetch(`http://${window.location.hostname}:3000/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsedOrders) });
         localStorage.setItem('svd_recovery_audit_logs', JSON.stringify(auditLogs));
         setTables(newTables);
         setOrders(parsedOrders);
@@ -490,7 +498,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
         if (ordersUpdated) {
           setOrders(newOrders);
-          fetch('http://localhost:3000/api/orders/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrders) });
+          fetch(`http://${window.location.hostname}:3000/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrders) });
         }
         if (newNotifications.length > 0) {
           setPaymentNotifications(prev => {
@@ -861,7 +869,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             timestamp: Date.now(),
             specialNotes: specialNotes || o.specialNotes
           };
-          fetch(`http://localhost:3000/api/orders/${updatedOrder.id}`, {
+          fetch(`http://${window.location.hostname}:3000/api/orders/${updatedOrder.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedOrder)
@@ -894,7 +902,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         pickupTime
       };
 
-      fetch('http://localhost:3000/api/orders', {
+      fetch(`http://${window.location.hostname}:3000/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newOrder)
@@ -940,7 +948,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           });
         }
         
-        fetch(`http://localhost:3000/api/orders/${orderId}`, {
+        fetch(`http://${window.location.hostname}:3000/api/orders/${orderId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(nextOrder)
@@ -989,7 +997,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const nextOrders = orders.map(o => {
       if (o.id === orderId) {
         const nextOrder = { ...o, status: 'PAID' as const };
-        fetch(`http://localhost:3000/api/orders/${orderId}`, {
+        fetch(`http://${window.location.hostname}:3000/api/orders/${orderId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(nextOrder)
