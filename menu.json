@@ -1,0 +1,1221 @@
+{
+  "dineIn": [
+    {
+      "id": 1,
+      "name": "Veg. Biryani",
+      "price": 180,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://img.freepik.com/premium-photo/indian-veg-biryani-veg-pulav-4k-hd-photo-indian-vegetable-pulao_1193781-13326.jpg?v=1781360658419",
+      "description": "Fragrant basmati rice cooked with seasonal vegetables and organic spices."
+    },
+    {
+      "id": 2,
+      "name": "Special Veg Biryani",
+      "price": 230,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "description": "Premium basmati rice layered with fresh veggies, cashews, and saffron."
+    },
+    {
+      "id": 3,
+      "name": "Mixed Veg Biryani",
+      "price": 240,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://img.freepik.com/premium-photo/navratan-mixed-veg-biryani_1170794-57688.jpg?v=1781360779421",
+      "description": "A delicious combination of fresh garden veggies, paneer, and mushrooms."
+    },
+    {
+      "id": 4,
+      "name": "Paneer Biryani",
+      "price": 230,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://img.freepik.com/fotos-premium/paneer-tikka-masala-biryani-paneer-tikkah-masala-tambien-conocido-como-paneer-biryani_1170794-58098.jpg?v=1781360852852",
+      "description": "Marinated cottage cheese chunks layered with slow-cooked biryani rice."
+    },
+    {
+      "id": 5,
+      "name": "Special Paneer Biryani",
+      "price": 270,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://orders.popskitchen.in/storage/2024/09/image-285.png?v=1781360909806",
+      "description": "Richly spiced paneer cubes cooked in cream and ghee layered with rice."
+    },
+    {
+      "id": 6,
+      "name": "Mushroom Biryani",
+      "price": 230,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://thumbs.dreamstime.com/b/delicious-lamb-biryani-herbs-rustic-copper-bowl-delicious-lamb-biryani-herbs-rustic-copper-bowl-ideal-405091525.jpg?v=1781361029969",
+      "description": "Fresh button mushrooms tossed in masala and cooked with long grain rice."
+    },
+    {
+      "id": 7,
+      "name": "Special Mushroom Biryani",
+      "price": 280,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://www.cookwithkushi.com/wp-content/uploads/2015/09/best_quick_easy_veg_mushroom_biryani.jpg?v=1781361112611",
+      "description": "Spicy claypot mushrooms tossed in chef's secret dry spices with biryani rice."
+    },
+    {
+      "id": 8,
+      "name": "Kaju Biryani",
+      "price": 240,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://thumbs.dreamstime.com/b/golden-vegetable-biryani-aromatic-rice-warm-spices-copper-bowl-richly-spiced-studded-cashews-raisins-glows-warmly-its-372600006.jpg?v=1781361238298",
+      "description": "Roasted cashew nuts cooked in a rich onion gravy and slow-cooked with basmati."
+    },
+    {
+      "id": 9,
+      "name": "Paneer Tikka Biryani",
+      "price": 260,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://barkatrice.in/wp-content/uploads/2024/06/unnamed-1.png?v=1781361291520",
+      "description": "Tandoor-grilled paneer tikka skewers layered with aromatic basmati rice."
+    },
+    {
+      "id": 10,
+      "name": "Ulavacharu Mushroom Biryani",
+      "price": 280,
+      "category": "Veg Biryani",
+      "type": "veg",
+      "image": "https://cookingwithconan.com/wp-content/uploads/2025/10/teamgreen1001_httpss.mj_.runFrGi2V2GQR4_A_highly_realistic_clo_72b99b4e-27fe-41ff-8bda-b7dc0b9b6733_2.png?v=1781361376726",
+      "description": "Basmati rice layered with juicy mushrooms and traditional Andhra horsegram soup."
+    },
+    {
+      "id": 11,
+      "name": "Plain Biryani Rice",
+      "price": 160,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://hungryforever.net/wp-content/uploads/2017/06/plain-biryani-rice-recipes.jpg?v=1781361447398",
+      "description": "Aromatic basmati rice cooked in special biryani stock without meat pieces."
+    },
+    {
+      "id": 12,
+      "name": "Egg Biryani",
+      "price": 190,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://static.vecteezy.com/system/resources/previews/074/299/396/non_2x/steaming-hot-chicken-biryani-in-a-traditional-copper-bowl-with-cashews-and-mint-photo.jpg?v=1781361504113",
+      "description": "Aromatic basmati rice served with boiled eggs cooked in spicy gravy."
+    },
+    {
+      "id": 13,
+      "name": "Special Egg Biryani",
+      "price": 230,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://img.freepik.com/premium-photo/egg-biryani-indian-appetizer-served-colorful-bowl-plate-dish_954355-423.jpg?v=1781361746074",
+      "description": "Double portion of spiced eggs cooked in saffron infused basmati rice."
+    },
+    {
+      "id": 14,
+      "name": "Chicken Dum Biryani",
+      "price": 260,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://thumbs.dreamstime.com/b/chicken-dum-biryani-platter-served-using-copper-utensils-chicken-dum-biryani-served-blue-plate-featuring-long-grain-421513135.jpg?v=1781361826451",
+      "description": "Traditional Hyderabadi dum biryani with marinated chicken pieces."
+    },
+    {
+      "id": 15,
+      "name": "Chicken Fry Biryani",
+      "price": 270,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://megachickenrecipes.com/wp-content/uploads/2022/08/Chicken-fry-piece-biryani-recipe-2.jpg?v=1781361889521",
+      "description": "Aromatic biryani rice served with crispy, spicy deep-fried chicken."
+    },
+    {
+      "id": 16,
+      "name": "Chicken Biryani (Bone Curry)",
+      "price": 270,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://c8.alamy.com/comp/PK8JA0/closeup-view-from-the-top-of-delicious-indian-chicken-biryani-served-in-authentic-copper-utensils-with-salad-raita-gravy-and-egg-natural-light-PK8JA0.jpg?v=1781361940949",
+      "description": "Classic biryani rice layered with rich, bone-in chicken curry."
+    },
+    {
+      "id": 17,
+      "name": "Special Chicken Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "A rich mix of boneless chicken tikka cooked with saffron basmati rice."
+    },
+    {
+      "id": 18,
+      "name": "Joint Chicken Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://www.shutterstock.com/shutterstock/photos/2000023562/display_1500/stock-photo-dum-handi-chicken-biryani-is-prepared-in-an-earthen-or-clay-pot-called-haandi-popular-indian-non-2000023562.jpg?v=1781362081957",
+      "description": "Delicious dum biryani served with tandoori grilled chicken leg joints."
+    },
+    {
+      "id": 19,
+      "name": "Mughlai Chicken Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://i.pinimg.com/originals/d9/33/ec/d933ecb95a17ef2bfd234d8e4988e62b.webp?v=1781362150284",
+      "description": "Rich, creamy biryani flavored with eggs, nuts, and Mughlai gravy."
+    },
+    {
+      "id": 20,
+      "name": "Chicken Tikka Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://tse1.mm.bing.net/th/id/OIP.nIMfKyEmN6xhtKoXtrSfuQHaEK?v=1781362455251",
+      "description": "Charcoal-grilled chicken tikka pieces cooked inside basmati biryani."
+    },
+    {
+      "id": 21,
+      "name": "Chicken Wings Biryani (Dry)",
+      "price": 270,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://img.freepik.com/premium-photo/chicken-biryani-photo-image-pic-chicken-biryani-picture-full-hd-4k-download-10_1085145-1617.jpg?v=1781362579484",
+      "description": "A unique biryani served with crispy, seasoned dry chicken wings."
+    },
+    {
+      "id": 22,
+      "name": "Chicken Wings Biryani (Semi Gravy)",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://yasalam.dk/wp-content/uploads/chicken-wings-biryani.jpg?v=1781362764286",
+      "description": "Biryani rice served with chicken wings cooked in semi-spicy onion gravy."
+    },
+    {
+      "id": 23,
+      "name": "Chicken Lollipop Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://thumbs.dreamstime.com/b/plate-chicken-lollipop-biryani-lollipops-cooked-basmati-rice-spices-garnished-fried-onions-mint-leaves-isolated-372804651.jpg?v=1781362977094",
+      "description": "Basmati biryani rice topped with crispy Indo-Chinese chicken lollipops."
+    },
+    {
+      "id": 24,
+      "name": "Ulavacharu Chicken Biryani",
+      "price": 330,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://masaladiaries.com/wp-content/uploads/2024/12/Chicken-65-Biryani-760x760.jpg?v=1781363043213",
+      "description": "Biryani rice flavored with traditional Andhra horsegram soup and chicken."
+    },
+    {
+      "id": 25,
+      "name": "Tangdi Kabab Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://www.cookwithkushi.com/wp-content/uploads/2023/04/best_chicken_pulao_pilaf-640x853.jpg?v=1781363130793",
+      "description": "Premium claypot biryani served with clay-oven roasted chicken drumsticks."
+    },
+    {
+      "id": 26,
+      "name": "Special Mutton Biryani (Bone)",
+      "price": 420,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://tinyytopic.com/wp-content/uploads/2023/03/mutton-biryani.jpg?v=1781363212210",
+      "description": "Basmati rice dum cooked with bone-in tender goat meat pieces."
+    },
+    {
+      "id": 27,
+      "name": "Mutton Fry Biryani",
+      "price": 420,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://www.cookwithnabeela.com/wp-content/uploads/2024/02/MuttonBiryani.webp?v=1781363263837",
+      "description": "Aromatic biryani rice served with pan-fried, spiced mutton bone pieces."
+    },
+    {
+      "id": 28,
+      "name": "Boneless Fish Biryani",
+      "price": 300,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://www.shanazrafiq.com/wp-content/uploads/2016/03/DSC_0003.jpg?v=1781363422852",
+      "description": "Mildly spiced basmati rice layered with crispy boneless fish cubes."
+    },
+    {
+      "id": 29,
+      "name": "Special Fish Biryani",
+      "price": 320,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://tse4.mm.bing.net/th/id/OIP.qO2N3p5AI6J_zqgC_ZS4XAHaE8?v=1781363923416",
+      "description": "Rich claypot biryani served with deep fried fish cubes in tangry gravy."
+    },
+    {
+      "id": 30,
+      "name": "Prawns Fry Biryani",
+      "price": 360,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?v=1781369597620",
+      "description": "Basmati rice served with pan-fried prawns marinated in garlic and ginger."
+    },
+    {
+      "id": 31,
+      "name": "Special Prawns Biryani",
+      "price": 360,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Spicy prawns cooked in a thick yogurt-tomato base layered with rice."
+    },
+    {
+      "id": 32,
+      "name": "Mixed Non-Veg Biryani",
+      "price": 420,
+      "category": "Non-Veg Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "description": "A royal combination of chicken, mutton, and prawns cooked with basmati."
+    },
+    {
+      "id": 33,
+      "name": "Veg Fried Rice",
+      "price": 180,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Wok-tossed rice with chopped carrots, beans, and spring onions."
+    },
+    {
+      "id": 34,
+      "name": "Special Veg Fried Rice",
+      "price": 220,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Veg fried rice loaded with extra nuts, cashews, and baby corn."
+    },
+    {
+      "id": 35,
+      "name": "Mixed Veg Fried Rice",
+      "price": 220,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Stir-fried rice with assorted veggies, paneer, and button mushrooms."
+    },
+    {
+      "id": 36,
+      "name": "Kaju Fried Rice",
+      "price": 250,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "A rich fried rice loaded with butter-roasted crunchy cashew nuts."
+    },
+    {
+      "id": 37,
+      "name": "Zeera Rice",
+      "price": 220,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=600",
+      "description": "Steamed basmati rice tempered with cumin seeds and pure ghee."
+    },
+    {
+      "id": 38,
+      "name": "Paneer Fried Rice",
+      "price": 230,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Chinese style wok-tossed rice cooked with crispy paneer cubes."
+    },
+    {
+      "id": 39,
+      "name": "Mushroom Fried Rice",
+      "price": 230,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=600",
+      "description": "Fluffy rice wok-tossed with fresh button mushrooms and garlic."
+    },
+    {
+      "id": 40,
+      "name": "Schezwan Veg Fried Rice",
+      "price": 200,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Spicy fried rice tossed in homemade Schezwan chilli pepper paste."
+    },
+    {
+      "id": 41,
+      "name": "Curd Rice",
+      "price": 110,
+      "category": "Veg Fried Rice",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=600",
+      "description": "Traditional South Indian rice mixed with fresh yogurt and tempered mustard."
+    },
+    {
+      "id": 42,
+      "name": "Egg Fried Rice",
+      "price": 200,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=600",
+      "description": "Chinese classic wok-tossed rice with scrambled eggs and spring onion."
+    },
+    {
+      "id": 43,
+      "name": "Special Egg Fried Rice",
+      "price": 240,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=600",
+      "description": "Egg fried rice cooked with double eggs, onions, and spicy spices."
+    },
+    {
+      "id": 44,
+      "name": "Chicken Fried Rice",
+      "price": 240,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Wok-tossed rice with shredded chicken breast and fresh vegetables."
+    },
+    {
+      "id": 45,
+      "name": "Special Chicken Fried Rice",
+      "price": 290,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Wok-tossed chicken fried rice topped with spicy chicken 65 pieces."
+    },
+    {
+      "id": 46,
+      "name": "Prawns Fried Rice",
+      "price": 320,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Stir-fried rice cooked with juicy marinated baby prawns and onions."
+    },
+    {
+      "id": 47,
+      "name": "Mixed Non-Veg Fried Rice",
+      "price": 350,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Stir-fried rice loaded with a mix of chicken, egg, and baby prawns."
+    },
+    {
+      "id": 48,
+      "name": "Schezwan Chicken Fried Rice",
+      "price": 250,
+      "category": "Non-Veg Fried Rice",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Spicy chicken fried rice tossed in homemade Schezwan chilli gravy."
+    },
+    {
+      "id": 49,
+      "name": "Veg. Manchurian",
+      "price": 170,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy fried vegetable balls tossed in sweet and tangy soya garlic sauce."
+    },
+    {
+      "id": 50,
+      "name": "Crispy Veg",
+      "price": 180,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Thinly sliced garden fresh vegetables golden fried and seasoned with salt."
+    },
+    {
+      "id": 51,
+      "name": "Dragon Veg",
+      "price": 180,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Exotic julienned vegetables tossed in spicy red dragon chilli sauce."
+    },
+    {
+      "id": 52,
+      "name": "Paneer Majestic",
+      "price": 240,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Tender paneer strips cooked in yogurt, mint, green chillies, and curry leaves."
+    },
+    {
+      "id": 53,
+      "name": "Paneer Manchurian",
+      "price": 220,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Paneer cubes tossed in classic soy-garlic Indo-Chinese manchurian sauce."
+    },
+    {
+      "id": 54,
+      "name": "Paneer 65",
+      "price": 220,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Deep-fried paneer cubes marinated in rich South Indian red spices."
+    },
+    {
+      "id": 55,
+      "name": "Chilli Paneer",
+      "price": 230,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Wok-tossed paneer chunks with capsicum, onion, and dark soy chilli glaze."
+    },
+    {
+      "id": 56,
+      "name": "Mushroom Manchurian",
+      "price": 230,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy golden button mushrooms tossed in spicy manchurian glaze."
+    },
+    {
+      "id": 57,
+      "name": "Mushroom Chilli",
+      "price": 230,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=600",
+      "description": "Deep fried mushrooms wok-tossed with capsicum, green chillies and garlic."
+    },
+    {
+      "id": 58,
+      "name": "Mushroom 65",
+      "price": 230,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=600",
+      "description": "Batter-fried mushrooms marinated in traditional ginger-garlic red paste."
+    },
+    {
+      "id": 59,
+      "name": "Pepper Mushroom",
+      "price": 240,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=600",
+      "description": "Dry tossed mushrooms seasoned heavily with fresh crushed black peppercorns."
+    },
+    {
+      "id": 60,
+      "name": "Veg. Hong Kong",
+      "price": 240,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Fried vegetables tossed in sweet, sour and spicy Hong Kong style sauce."
+    },
+    {
+      "id": 61,
+      "name": "Kaju Fry",
+      "price": 250,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Whole cashews pan fried in pure ghee, seasoned with salt and black pepper."
+    },
+    {
+      "id": 62,
+      "name": "Crispy Baby Corn",
+      "price": 230,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "description": "Tender baby corn fingers golden-fried and tossed with spices."
+    },
+    {
+      "id": 63,
+      "name": "Baby Corn Manchurian",
+      "price": 210,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "description": "Baby corn pieces tossed in thick Indo-Chinese sweet garlic manchurian."
+    },
+    {
+      "id": 64,
+      "name": "Baby Corn Chilli",
+      "price": 210,
+      "category": "Veg Starters",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy baby corn stir-fried in high flame with bell peppers and green chillies."
+    },
+    {
+      "id": 65,
+      "name": "RRR Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Hot and spicy dry chicken starter cooked in green chilli and curry leaves."
+    },
+    {
+      "id": 66,
+      "name": "Hot & Crispy Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy breaded chicken breast strips served piping hot with garlic dip."
+    },
+    {
+      "id": 67,
+      "name": "Chicken Manchurian",
+      "price": 270,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1598511726623-d73400609b40?auto=format&fit=crop&q=80&w=600",
+      "description": "Golden fried chicken bites tossed in ginger, garlic and soy manchurian sauce."
+    },
+    {
+      "id": 68,
+      "name": "Chicken 65",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Classic deep-fried chicken cubes marinated in red chillies and yogurt."
+    },
+    {
+      "id": 69,
+      "name": "Chilli Chicken",
+      "price": 290,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1598511726623-d73400609b40?auto=format&fit=crop&q=80&w=600",
+      "description": "Battered chicken chunks stir-fried with capsicum, onion, and dark soya glaze."
+    },
+    {
+      "id": 70,
+      "name": "American Chicken",
+      "price": 290,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Golden fried chicken fingers glazed with sweet honey and garlic sauce."
+    },
+    {
+      "id": 71,
+      "name": "Chicken Fry Bone",
+      "price": 270,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Traditional bone-in chicken pieces deep fried in dry southern spices."
+    },
+    {
+      "id": 72,
+      "name": "Chicken Fry Boneless",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Boneless chicken breast nuggets deep fried in spicy corn flour batter."
+    },
+    {
+      "id": 73,
+      "name": "Chicken Wings (Dry)",
+      "price": 280,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy chicken wings seasoned dry with ginger, salt, and red pepper."
+    },
+    {
+      "id": 74,
+      "name": "Chicken Wings (Semi Gravy)",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Juicy chicken wings coated in semi-dry garlic and red pepper paste."
+    },
+    {
+      "id": 75,
+      "name": "Chicken Lollipop",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Crispy deep-fried chicken wings pulled down and tossed in schezwan sauce."
+    },
+    {
+      "id": 76,
+      "name": "Chicken 555",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Marinated chicken strips wok-tossed with cashews, yogurt, and red pepper."
+    },
+    {
+      "id": 77,
+      "name": "Chilli Wings",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Chicken wings fried and tossed in super hot red chilli garlic paste."
+    },
+    {
+      "id": 78,
+      "name": "Kaju Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Deep fried chicken chunks stir-fried with roasted cashew nuts and soy."
+    },
+    {
+      "id": 79,
+      "name": "Crispy Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Extra crunchy golden chicken nuggets dusted with salt and white pepper."
+    },
+    {
+      "id": 80,
+      "name": "Chicken Majestic",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Chicken breast strips marinated in buttermilk and wok-tossed in yogurt."
+    },
+    {
+      "id": 81,
+      "name": "Dragon Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1598511726623-d73400609b40?auto=format&fit=crop&q=80&w=600",
+      "description": "Fried chicken strips tossed in extremely hot sweet and spicy red chilli sauce."
+    },
+    {
+      "id": 82,
+      "name": "Lemon Chicken",
+      "price": 290,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Stir-fried chicken nuggets coated in tangy fresh lemon juice and syrup."
+    },
+    {
+      "id": 83,
+      "name": "Pepper Chicken",
+      "price": 290,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Dry chicken chunks sautéed with fresh onions and crushed black pepper."
+    },
+    {
+      "id": 84,
+      "name": "Ginger Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Stir-fried chicken breast tossed in fresh ginger juliennes and dark soy."
+    },
+    {
+      "id": 85,
+      "name": "Garlic Chicken",
+      "price": 300,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=600",
+      "description": "Indo-Chinese chicken starter wok-tossed with plenty of minced fresh garlic."
+    },
+    {
+      "id": 86,
+      "name": "Mutton Fry",
+      "price": 420,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Tender goat mutton bone pieces pan fried in rich Guntur dry red spices."
+    },
+    {
+      "id": 87,
+      "name": "Chilli Mutton",
+      "price": 430,
+      "category": "Non-Veg Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Pan-fried mutton pieces tossed in extremely hot soy chilli green gravy."
+    },
+    {
+      "id": 88,
+      "name": "Apollo Fish",
+      "price": 300,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=600",
+      "description": "Andhra classic boneless fish cubes marinated in yogurt and deep fried."
+    },
+    {
+      "id": 89,
+      "name": "Crispy Fish",
+      "price": 320,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1535399831218-d5bd362bae09?auto=format&fit=crop&q=80&w=600",
+      "description": "Crumbed boneless fish fillets deep fried till extra golden and crunchy."
+    },
+    {
+      "id": 90,
+      "name": "Chilli Fish",
+      "price": 300,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1535399831218-d5bd362bae09?auto=format&fit=crop&q=80&w=600",
+      "description": "Fried fish chunks tossed in wok with bell peppers, green chillies and soy."
+    },
+    {
+      "id": 91,
+      "name": "Prawns Fry",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Pan-fried prawns marinated in fresh ginger-garlic paste and lemon."
+    },
+    {
+      "id": 92,
+      "name": "Ginger Prawns",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Tossed prawns cooked in wok with julienned ginger and soy sauce."
+    },
+    {
+      "id": 93,
+      "name": "Garlic Prawns",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Fried prawns tossed in Chinese style garlic sauce with spring onions."
+    },
+    {
+      "id": 94,
+      "name": "Chilli Prawns",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Juicy prawns stir-fried in capsicum, onions, and hot chilli garlic base."
+    },
+    {
+      "id": 95,
+      "name": "Loose Prawns (Dry)",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Lightly battered crispy fried prawns tossed dry with spring onions."
+    },
+    {
+      "id": 96,
+      "name": "Pepper Prawns",
+      "price": 360,
+      "category": "Sea Food Starters",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Pan-roasted prawns tossed in crushed fresh black pepper and salt."
+    },
+    {
+      "id": 97,
+      "name": "Omelet",
+      "price": 80,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Fluffy double egg omelet with chopped green chillies and onions."
+    },
+    {
+      "id": 98,
+      "name": "Chilli Egg",
+      "price": 200,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Hard-boiled eggs battered, deep-fried, and tossed in chilli soya sauce."
+    },
+    {
+      "id": 99,
+      "name": "Egg Manchurian",
+      "price": 200,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Fried egg wedges cooked in Indo-Chinese garlic soy manchurian gravy."
+    },
+    {
+      "id": 100,
+      "name": "Egg Bhurji",
+      "price": 170,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&q=80&w=600",
+      "description": "Traditional Indian scrambled eggs cooked with spices, onions and coriander."
+    },
+    {
+      "id": 101,
+      "name": "Egg Curry",
+      "price": 170,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Boiled eggs cooked in a mildly spiced homestyle onion-tomato gravy."
+    },
+    {
+      "id": 102,
+      "name": "Methi Egg Curry",
+      "price": 220,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Hard-boiled eggs cooked in a highly aromatic fresh fenugreek leaf gravy."
+    },
+    {
+      "id": 103,
+      "name": "Egg Tomato",
+      "price": 180,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "A tangy egg curry cooked with boiled eggs and fresh ground tomatoes."
+    },
+    {
+      "id": 104,
+      "name": "Egg Kheema Curry",
+      "price": 180,
+      "category": "Egg Items",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Finely minced boiled egg scramble cooked in a rich, spicy mutton style gravy."
+    },
+    {
+      "id": 105,
+      "name": "Tandoori Chicken (Half)",
+      "price": 260,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1610057099443-fde8c4d90ef8?auto=format&fit=crop&q=80&w=600",
+      "description": "Half chicken marinated in yogurt and tandoori spices, roasted in clay oven."
+    },
+    {
+      "id": 106,
+      "name": "Tandoori Chicken (Full)",
+      "price": 520,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1610057099443-fde8c4d90ef8?auto=format&fit=crop&q=80&w=600",
+      "description": "Full chicken roasted in clay tandoor, served with mint chutney and onion rings."
+    },
+    {
+      "id": 107,
+      "name": "Tangdi Kebab (4 pcs)",
+      "price": 250,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+      "description": "Chicken drumsticks marinated in rich spice paste and grilled inside tandoor."
+    },
+    {
+      "id": 108,
+      "name": "Hariyali Kebab (4 pcs)",
+      "price": 250,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://www.spiceindiaonline.com/wp-content/uploads/2006/10/Hariyali-Chicken-tikka.jpg?v=1781363838587",
+      "description": "Chicken chunks marinated in mint, coriander, and spinach paste and roasted."
+    },
+    {
+      "id": 109,
+      "name": "Malai Kebab (4 pcs)",
+      "price": 250,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://cdn.grofers.com/assets/search/usecase/banner/chicken_malai_kebab_01.png?v=1781363773577",
+      "description": "Creamy chicken kebabs marinated in cashew paste, cheese, and fresh cream."
+    },
+    {
+      "id": 110,
+      "name": "Chicken Tikka",
+      "price": 260,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://img.freepik.com/premium-photo/chicken-tikka-copper-plate_1179130-493204.jpg?v=1781363728599",
+      "description": "Spiced chicken cubes skewered with onions and bell peppers and roasted."
+    },
+    {
+      "id": 111,
+      "name": "Malai Tikka",
+      "price": 260,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://www.scrumptiously.com/wp-content/uploads/2023/01/ChickenMalaiTikka.webp?v=1781363630723",
+      "description": "Mild boneless chicken chunks marinated in cream, cheese and grilled."
+    },
+    {
+      "id": 112,
+      "name": "Fish Tikka",
+      "price": 270,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://cdn.grofers.com/assets/search/usecase/banner/fish_tikka_01.png?v=1781363587690",
+      "description": "Boneless fish cubes marinated in mustard oil, ajwain and grilled in tandoor."
+    },
+    {
+      "id": 113,
+      "name": "Prawns Tikka",
+      "price": 260,
+      "category": "Tandoori Non-Veg",
+      "type": "non-veg",
+      "image": "https://img.freepik.com/premium-photo/tikka-masala-served-traditional-indian-copper-bowl_974629-476261.jpg?v=1781363478574",
+      "description": "Marinated tiger prawns skewered and slow roasted to perfection in clay tandoor."
+    },
+    {
+      "id": 114,
+      "name": "Malai Paneer",
+      "price": 250,
+      "category": "Tandoori Veg",
+      "type": "veg",
+      "image": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&q=80&w=600",
+      "description": "Cottage cheese cubes marinated in rich cream, cashews, and cardamom and grilled."
+    },
+    {
+      "id": 115,
+      "name": "Paneer Tikka",
+      "price": 250,
+      "category": "Tandoori Veg",
+      "type": "veg",
+      "image": "https://tse1.mm.bing.net/th/id/OIP.bywIBqR7BsxTwoFvwgiehgHaEO?v=1781361639062",
+      "description": "Traditional clay-oven grilled paneer tikka skewered with tomatoes and onions."
+    }
+  ],
+  "takeaway": [
+    {
+      "id": 201,
+      "name": "Chicken Dum Biryani (Couple)",
+      "price": 360,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Aromatic Hyderabadi chicken dum biryani. Perfect portion for two people."
+    },
+    {
+      "id": 202,
+      "name": "Chicken Fry Biryani (Couple)",
+      "price": 370,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Aromatic biryani rice served with crispy, spicy fried chicken. Serves two."
+    },
+    {
+      "id": 203,
+      "name": "Chicken B/L Fry Biryani (Couple)",
+      "price": 400,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Biryani rice served with boneless fried chicken cubes. Serves two."
+    },
+    {
+      "id": 204,
+      "name": "Chicken Wings Biryani (Couple - Dry)",
+      "price": 380,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Dum biryani rice paired with crispy seasoned dry chicken wings. Serves two."
+    },
+    {
+      "id": 205,
+      "name": "Chicken Wings Biryani (Couple - Semi Gravy)",
+      "price": 400,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Biryani rice topped with chicken wings cooked in onion gravy. Serves two."
+    },
+    {
+      "id": 206,
+      "name": "Chicken Lollipop Biryani (Couple)",
+      "price": 400,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Golden fried chicken lollipops served over spiced biryani rice. Serves two."
+    },
+    {
+      "id": 207,
+      "name": "Mutton Biryani (Couple)",
+      "price": 500,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1545247181-516773cae76d?auto=format&fit=crop&q=80&w=600",
+      "description": "Basmati rice dum cooked with bone-in tender mutton pieces. Serves two."
+    },
+    {
+      "id": 208,
+      "name": "Prawns Biryani (Couple)",
+      "price": 460,
+      "category": "Couple Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Biryani rice cooked with spicy marinated prawns and yogurt. Serves two."
+    },
+    {
+      "id": 301,
+      "name": "Family Dum Biryani (Chicken)",
+      "price": 630,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Hyderabadi chicken dum biryani in family portion. Serves 3-4 people."
+    },
+    {
+      "id": 302,
+      "name": "Family Fry Biryani (Chicken)",
+      "price": 680,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Basmati biryani rice served with a large family pack of fried chicken. Serves 3-4."
+    },
+    {
+      "id": 303,
+      "name": "Family Wings Biryani (Dry)",
+      "price": 700,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Family portion of biryani served with crispy seasoned dry chicken wings. Serves 3-4."
+    },
+    {
+      "id": 304,
+      "name": "Family Wings Biryani (Semi Gravy)",
+      "price": 740,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Large pack of wings cooked in onion gravy served over biryani rice. Serves 3-4."
+    },
+    {
+      "id": 305,
+      "name": "Family Lollipop Biryani (Chicken)",
+      "price": 740,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "A huge portion of lollipop biryani for groups. Serves 3-4."
+    },
+    {
+      "id": 306,
+      "name": "Family Special Biryani (Chicken)",
+      "price": 700,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Chef's special boneless chicken tikka family pack. Serves 3-4."
+    },
+    {
+      "id": 307,
+      "name": "Family Prawns Biryani",
+      "price": 750,
+      "category": "Family Pack",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
+      "description": "Family portion of spiced prawns biryani. Serves 3-4."
+    },
+    {
+      "id": 401,
+      "name": "Bucket Dum Biryani (Chicken)",
+      "price": 700,
+      "category": "Bucket Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Traditional Hyderabadi chicken dum biryani served in a large take-out bucket. Serves 4-5."
+    },
+    {
+      "id": 402,
+      "name": "Bucket Fry Biryani (Chicken)",
+      "price": 780,
+      "category": "Bucket Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Giant bucket of biryani rice topped with crispy bone-in/boneless fried chicken. Serves 4-5."
+    },
+    {
+      "id": 403,
+      "name": "Bucket Wings Biryani (Chicken)",
+      "price": 770,
+      "category": "Bucket Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "A large take-out bucket of wings biryani with extra wings. Serves 4-5."
+    },
+    {
+      "id": 404,
+      "name": "Bucket Wings Biryani (Semi Gravy)",
+      "price": 830,
+      "category": "Bucket Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Bucket of biryani rice served with wings cooked in semi-dry gravy. Serves 4-5."
+    },
+    {
+      "id": 405,
+      "name": "Bucket Lollipop Biryani (Chicken)",
+      "price": 830,
+      "category": "Bucket Biryani",
+      "type": "non-veg",
+      "image": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&q=80&w=600",
+      "description": "Super large bucket of lollipop chicken biryani. Serves 4-5."
+    }
+  ]
+}

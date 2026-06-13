@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +27,35 @@ const io = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } 
 
 // --- PRISMA (PostgreSQL) INIT ---
 const prisma = new PrismaClient();
+
+// --- Seed Menu Items to PostgreSQL if empty ---
+const seedMenuIfEmpty = async () => {
+  try {
+    const count = await prisma.menuItem.count();
+    if (count === 0) {
+      console.log('[Database] MenuItem table is empty. Seeding from menu.json...');
+      const menuData = JSON.parse(fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8'));
+      const allItems = [...menuData.dineIn, ...menuData.takeaway];
+      for (const item of allItems) {
+        await prisma.menuItem.create({
+          data: {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            category: item.category,
+            type: item.type,
+            image: item.image,
+            description: item.description
+          }
+        });
+      }
+      console.log(`[Database] Seeded ${allItems.length} menu items successfully.`);
+    }
+  } catch (err) {
+    console.warn('[Database] Seeding skipped (PostgreSQL might be offline):', err.message);
+  }
+};
+seedMenuIfEmpty();
 
 // --- MONGOOSE (MongoDB) INIT ---
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/svd_db', {
@@ -192,6 +222,158 @@ app.post('/api/orders/sync', async (req, res) => {
   // If the frontend tries to sync completely, we just broadcast to keep devices in sync
   io.emit('orders_synced', req.body);
   res.json({ message: 'Sync broadcasted' });
+});
+
+// Fetch all menu items (with fallback to local JSON file)
+app.get('/api/menu', async (req, res) => {
+  try {
+    const items = await prisma.menuItem.findMany();
+    if (items.length > 0) {
+      const dineIn = items.filter(i => !['Couple Pack', 'Family Pack', 'Bucket Biryani'].includes(i.category));
+      const takeaway = items.filter(i => ['Couple Pack', 'Family Pack', 'Bucket Biryani'].includes(i.category));
+      return res.json({ dineIn, takeaway });
+    }
+  } catch (err) {
+    console.warn('[Database] Failed to fetch menu from PostgreSQL, falling back to menu.json:', err.message);
+  }
+  
+  try {
+    const menuData = JSON.parse(fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8'));
+    res.json(menuData);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to read menu data' });
+  }
+});
+
+// Update menu item image (with DB write and JSON file backup + Socket.io live broadcast)
+app.put('/api/menu/:id/image', async (req, res) => {
+  const { id } = req.params;
+  const { image } = req.body;
+  
+  if (!image) {
+    return res.status(400).json({ error: 'Image URL is required' });
+  }
+
+  const itemId = parseInt(id);
+
+  // 1. Broadcast the update in real-time instantly via Socket.io
+  console.log(`[Realtime Events] Emitting menu_item_image_updated for ID ${itemId} -> ${image}`);
+  io.emit('menu_item_image_updated', { id: itemId, image });
+
+  // 2. Try updating PostgreSQL via Prisma
+  let dbSuccess = false;
+  try {
+    await prisma.menuItem.update({
+      where: { id: itemId },
+      data: { image }
+    });
+    console.log(`[Database] Updated menu item ${itemId} image in PostgreSQL.`);
+    dbSuccess = true;
+  } catch (err) {
+    console.warn(`[Database] Failed to update PostgreSQL for item ${itemId} (using file fallback):`, err.message);
+  }
+
+  // 3. Always update the local menu.json file as a backup
+  try {
+    const menuPath = path.join(__dirname, 'menu.json');
+    const menuData = JSON.parse(fs.readFileSync(menuPath, 'utf8'));
+    
+    let updated = false;
+    menuData.dineIn = menuData.dineIn.map(item => {
+      if (item.id === itemId) {
+        updated = true;
+        return { ...item, image };
+      }
+      return item;
+    });
+    
+    if (!updated) {
+      menuData.takeaway = menuData.takeaway.map(item => {
+        if (item.id === itemId) {
+          updated = true;
+          return { ...item, image };
+        }
+        return item;
+      });
+    }
+
+    if (updated) {
+      fs.writeFileSync(menuPath, JSON.stringify(menuData, null, 2), 'utf8');
+      console.log(`[File System] Updated menu item ${itemId} image in menu.json.`);
+    }
+  } catch (err) {
+    console.error('[File System] Failed to update menu.json:', err);
+  }
+
+  res.json({ success: true, message: 'Image updated successfully', dbSync: dbSuccess });
+});
+
+// Update entire menu item (with DB write, JSON backup and Socket.io live broadcast)
+app.put('/api/menu/:id', async (req, res) => {
+  const { id } = req.params;
+  const itemId = parseInt(id);
+  const updateData = req.body;
+
+  // 1. Broadcast the update in real-time instantly via Socket.io to all clients
+  console.log(`[Realtime Events] Emitting menu_item_updated for ID ${itemId}:`, updateData);
+  io.emit('menu_item_updated', { id: itemId, ...updateData });
+
+  // 2. Try updating PostgreSQL via Prisma (only schema fields)
+  let dbSuccess = false;
+  try {
+    const prismaData = {};
+    if (updateData.name !== undefined) prismaData.name = updateData.name;
+    if (updateData.price !== undefined) prismaData.price = parseFloat(updateData.price);
+    if (updateData.category !== undefined) prismaData.category = updateData.category;
+    if (updateData.type !== undefined) prismaData.type = updateData.type;
+    if (updateData.image !== undefined) prismaData.image = updateData.image;
+    if (updateData.description !== undefined) prismaData.description = updateData.description;
+
+    if (Object.keys(prismaData).length > 0) {
+      await prisma.menuItem.update({
+        where: { id: itemId },
+        data: prismaData
+      });
+      console.log(`[Database] Updated menu item ${itemId} in PostgreSQL.`);
+      dbSuccess = true;
+    }
+  } catch (err) {
+    console.warn(`[Database] Failed to update PostgreSQL for item ${itemId} (using file fallback):`, err.message);
+  }
+
+  // 3. Update the local menu.json file
+  try {
+    const menuPath = path.join(__dirname, 'menu.json');
+    const menuData = JSON.parse(fs.readFileSync(menuPath, 'utf8'));
+    
+    let updated = false;
+    menuData.dineIn = menuData.dineIn.map(item => {
+      if (item.id === itemId) {
+        updated = true;
+        return { ...item, ...updateData };
+      }
+      return item;
+    });
+    
+    if (!updated) {
+      menuData.takeaway = menuData.takeaway.map(item => {
+        if (item.id === itemId) {
+          updated = true;
+          return { ...item, ...updateData };
+        }
+        return item;
+      });
+    }
+
+    if (updated) {
+      fs.writeFileSync(menuPath, JSON.stringify(menuData, null, 2), 'utf8');
+      console.log(`[File System] Updated menu item ${itemId} in menu.json.`);
+    }
+  } catch (err) {
+    console.error('[File System] Failed to update menu.json:', err);
+  }
+
+  res.json({ success: true, message: 'Menu item updated successfully', dbSync: dbSuccess });
 });
 
 // --- SERVE STATIC FRONTEND FOR UNIFIED RENDER DEPLOYMENT ---

@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import type { Invoice } from '../context/AppContext';
 import AuthGate from '../components/AuthGate';
 import ImageWithFallback from '../components/ImageWithFallback';
+import { getHDImageForDish, HD_FOOD_PHOTOS } from '../data/imageMapping';
 import { 
   BarChart3, Users, DollarSign, ClipboardList, LogOut, Download, 
   Printer, QrCode, UtensilsCrossed, Star, Settings, Search, 
@@ -1405,13 +1406,65 @@ const AdminDashboard: React.FC = () => {
 
                 <div>
                   <label className="block mb-1">Image URL</label>
-                  <input 
-                    type="text" 
-                    required
-                    value={dishForm.image}
-                    onChange={(e) => setDishForm(prev => ({ ...prev, image: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-neutral-100"
-                  />
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      required
+                      value={dishForm.image}
+                      onChange={(e) => setDishForm(prev => ({ ...prev, image: e.target.value }))}
+                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-neutral-100"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const hdImage = getHDImageForDish(dishForm.name);
+                        setDishForm(prev => ({ ...prev, image: hdImage }));
+                      }}
+                      className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 rounded-xl text-[10px] font-bold uppercase transition-all whitespace-nowrap text-maroon dark:text-saffron"
+                    >
+                      Auto HD
+                    </button>
+                  </div>
+                  <p className="text-[9px] text-neutral-400 mt-1">
+                    Click "Auto HD" to find a matching high-definition realistic food photography URL.
+                  </p>
+
+                  {/* Curated Suggestion Thumbnails */}
+                  {(() => {
+                    const nameLower = dishForm.name.toLowerCase();
+                    const categoryLower = dishForm.category.toLowerCase();
+                    const categories = Object.keys(HD_FOOD_PHOTOS) as Array<keyof typeof HD_FOOD_PHOTOS>;
+                    const matchedCategory = categories.find(cat => nameLower.includes(cat) || categoryLower.includes(cat));
+                    const matches = matchedCategory ? HD_FOOD_PHOTOS[matchedCategory] : [];
+                    
+                    if (matches.length === 0) return null;
+
+                    return (
+                      <div className="mt-2 space-y-1">
+                        <label className="block text-[10px] font-bold text-neutral-400">Select HD Food Photo Suggestion:</label>
+                        <div className="flex gap-2 overflow-x-auto py-1 scrollbar-none">
+                          {matches.map((url, idx) => (
+                            <div 
+                              key={idx}
+                              onClick={() => setDishForm(prev => ({ ...prev, image: url }))}
+                              className={`relative cursor-pointer w-14 h-14 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all ${
+                                dishForm.image.split('?')[0] === url.split('?')[0] 
+                                  ? 'border-maroon dark:border-saffron scale-95' 
+                                  : 'border-neutral-250 dark:border-neutral-750'
+                              }`}
+                            >
+                              <img src={url} alt="HD Suggestion" className="w-full h-full object-cover" />
+                              {dishForm.image.split('?')[0] === url.split('?')[0] && (
+                                <div className="absolute inset-0 bg-black/20 flex items-center justify-center text-[10px] text-white font-bold">
+                                  ✓
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div>

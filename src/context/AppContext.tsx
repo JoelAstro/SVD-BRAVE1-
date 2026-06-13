@@ -154,6 +154,10 @@ const DEFAULT_TABLES: Table[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Determine API URL based on environment (Vite dev port vs unified production)
+  const isDev = window.location.port !== '' && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443';
+  const API_URL = isDev ? `http://${window.location.hostname}:3000` : '';
+
   // --- STATE ---
   const [tables, setTables] = useState<Table[]>(() => {
     const stored = localStorage.getItem('svd_tables');
@@ -233,9 +237,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     socketRef.current = io(isDev ? `http://${window.location.hostname}:3000` : undefined, { 
-      transports: ['websocket'],
       reconnection: true,
       reconnectionAttempts: Infinity
+    });
+
+    socketRef.current.on('connect', () => {
+      console.log('[Socket.io] Connected successfully. Socket ID:', socketRef.current.id);
+    });
+
+    socketRef.current.on('connect_error', (err: any) => {
+      console.warn('[Socket.io] Connection error:', err);
+    });
+
+    socketRef.current.on('disconnect', (reason: string) => {
+      console.log('[Socket.io] Disconnected:', reason);
     });
     
     fetch(`${API_URL}/api/orders`)
@@ -249,6 +264,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       })
       .catch(err => console.error('Failed to fetch orders:', err));
+
+    fetch(`${API_URL}/api/menu`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data.dineIn) && Array.isArray(data.takeaway)) {
+          console.log('[AppContext] Loaded initial menu from backend');
+          setMenuItems(data.dineIn);
+          setParcelItems(data.takeaway);
+          localStorage.setItem('svd_menu_items', JSON.stringify(data.dineIn));
+          localStorage.setItem('svd_parcel_items', JSON.stringify(data.takeaway));
+        }
+      })
+      .catch(err => console.error('Failed to fetch menu:', err));
 
     socketRef.current.on('new-order', (newOrder: Order) => {
       console.log('[Realtime Events] Received new-order:', newOrder.id);
@@ -267,6 +295,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setOrders(syncedOrders);
     });
 
+    socketRef.current.on('menu_item_image_updated', (data: { id: number, image: string }) => {
+      console.log('[Realtime Events] Received menu_item_image_updated:', data.id, '->', data.image);
+      setMenuItems(prev => prev.map(m => m.id === data.id ? { ...m, image: data.image } : m));
+      setParcelItems(prev => prev.map(p => p.id === data.id ? { ...p, image: data.image } : p));
+      
+      const storedDineIn = localStorage.getItem('svd_menu_items');
+      const storedTakeaway = localStorage.getItem('svd_parcel_items');
+      if (storedDineIn) {
+        const parsed = JSON.parse(storedDineIn);
+        const updated = parsed.map((m: any) => m.id === data.id ? { ...m, image: data.image } : m);
+        localStorage.setItem('svd_menu_items', JSON.stringify(updated));
+      }
+      if (storedTakeaway) {
+        const parsed = JSON.parse(storedTakeaway);
+        const updated = parsed.map((p: any) => p.id === data.id ? { ...p, image: data.image } : p);
+        localStorage.setItem('svd_parcel_items', JSON.stringify(updated));
+      }
+    });
+
+    socketRef.current.on('menu_item_updated', (data: any) => {
+      console.log('[Realtime Events] Received menu_item_updated:', data.id, data);
+      const updateFn = (prev: any[]) => prev.map(item => item.id === data.id ? { ...item, ...data } : item);
+      setMenuItems(prev => updateFn(prev));
+      setParcelItems(prev => updateFn(prev));
+      
+      const storedDineIn = localStorage.getItem('svd_menu_items');
+      const storedTakeaway = localStorage.getItem('svd_parcel_items');
+      if (storedDineIn) {
+        const parsed = JSON.parse(storedDineIn);
+        localStorage.setItem('svd_menu_items', JSON.stringify(updateFn(parsed)));
+      }
+      if (storedTakeaway) {
+        const parsed = JSON.parse(storedTakeaway);
+        localStorage.setItem('svd_parcel_items', JSON.stringify(updateFn(parsed)));
+      }
+    });
+
     socketRef.current.on('new_notification', (notification: PaymentNotification) => {
       console.log('[Realtime Events] Received new_notification:', notification.id);
       setPaymentNotifications(prev => {
@@ -279,6 +344,56 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       socketRef.current.disconnect();
     };
   }, []);
+
+  // --- CROSS-TAB SYNC NATIVE STORAGE EVENT LISTENER ---
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'svd_menu_items' && e.newValue) {
+        console.log('[Storage Event] Dine-in menu items updated in another tab');
+        try {
+          setMenuItems(JSON.parse(e.newValue));
+        } catch (err) {
+          console.error('[Storage Event] Failed to parse menu items:', err);
+        }
+      }
+      if (e.key === 'svd_parcel_items' && e.newValue) {
+        console.log('[Storage Event] Parcel menu items updated in another tab');
+        try {
+          setParcelItems(JSON.parse(e.newValue));
+        } catch (err) {
+          console.error('[Storage Event] Failed to parse parcel items:', err);
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  // --- TAB FOCUS AUTO-REFRESH Fallback ---
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('[Tab Focus] Tab focused. Refreshing menu data...');
+      fetch(`${API_URL}/api/menu`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && Array.isArray(data.dineIn) && Array.isArray(data.takeaway)) {
+            console.log('[Tab Focus] Menu items refreshed successfully');
+            setMenuItems(data.dineIn);
+            setParcelItems(data.takeaway);
+            localStorage.setItem('svd_menu_items', JSON.stringify(data.dineIn));
+            localStorage.setItem('svd_parcel_items', JSON.stringify(data.takeaway));
+          }
+        })
+        .catch(err => console.error('[Tab Focus] Failed to refresh menu data:', err));
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [API_URL]);
 
   useEffect(() => {
     tablesRef.current = tables;
@@ -663,9 +778,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const syncChannel = React.useMemo(() => new BroadcastChannel('svd_restaurant_sync'), []);
 
-  // Determine API URL based on environment (Vite dev port vs unified production)
-  const isDev = window.location.port === '5173' || window.location.port === '5174';
-  const API_URL = isDev ? `http://${window.location.hostname}:3000` : '';
+  // Note: isDev and API_URL are defined at the top of AppProvider for clean scoping
 
 
   const triggerSync = () => {
@@ -790,12 +903,58 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateMenu = (newMenu: any[]) => {
+    newMenu.forEach(newItem => {
+      const currentItem = menuItems.find(m => m.id === newItem.id);
+      if (currentItem) {
+        const hasChanged = 
+          currentItem.name !== newItem.name ||
+          currentItem.price !== newItem.price ||
+          currentItem.category !== newItem.category ||
+          currentItem.type !== newItem.type ||
+          currentItem.image !== newItem.image ||
+          currentItem.description !== newItem.description ||
+          currentItem.disabled !== newItem.disabled;
+
+        if (hasChanged) {
+          console.log(`[AppContext] Menu item ${newItem.id} updated. Syncing to backend...`);
+          fetch(`${API_URL}/api/menu/${newItem.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newItem)
+          }).catch(err => console.error('Failed to sync menu update to backend:', err));
+        }
+      }
+    });
+
     localStorage.setItem('svd_menu_items', JSON.stringify(newMenu));
     setMenuItems(newMenu);
     triggerSync();
   };
 
   const updateParcelMenu = (newMenu: any[]) => {
+    newMenu.forEach(newItem => {
+      const currentItem = parcelItems.find(p => p.id === newItem.id);
+      if (currentItem) {
+        const hasChanged = 
+          currentItem.name !== newItem.name ||
+          currentItem.price !== newItem.price ||
+          currentItem.category !== newItem.category ||
+          currentItem.type !== newItem.type ||
+          currentItem.image !== newItem.image ||
+          currentItem.description !== newItem.description ||
+          currentItem.disabled !== newItem.disabled;
+
+        if (hasChanged) {
+          console.log(`[AppContext] Takeaway item ${newItem.id} updated. Syncing to backend...`);
+          fetch(`${API_URL}/api/menu/${newItem.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newItem)
+          }).catch(err => console.error('Failed to sync parcel update to backend:', err));
+        }
+      }
+    });
+
     localStorage.setItem('svd_parcel_items', JSON.stringify(newMenu));
     setParcelItems(newMenu);
     triggerSync();

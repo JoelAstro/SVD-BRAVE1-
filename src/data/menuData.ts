@@ -1,3 +1,5 @@
+import { getHDImageForDish } from './imageMapping';
+
 export interface MenuItem {
   id: number;
   name: string;
@@ -18,7 +20,7 @@ export interface ParcelItem {
   description: string;
 }
 
-export const MENU_ITEMS: MenuItem[] = [
+const BASE_MENU_ITEMS: MenuItem[] = [
   // === VEG BIRYANI ===
   {
     id: 1,
@@ -1075,7 +1077,12 @@ export const MENU_ITEMS: MenuItem[] = [
   }
 ];
 
-export const PARCEL_ITEMS: ParcelItem[] = [
+export const MENU_ITEMS = BASE_MENU_ITEMS.map(item => ({
+  ...item,
+  image: getHDImageForDish(item.name)
+}));
+
+const BASE_PARCEL_ITEMS: ParcelItem[] = [
   // === COUPLE PACKS ===
   {
     id: 201,
@@ -1262,3 +1269,8 @@ export const PARCEL_ITEMS: ParcelItem[] = [
     description: "Super large bucket of lollipop chicken biryani. Serves 4-5."
   }
 ];
+
+export const PARCEL_ITEMS = BASE_PARCEL_ITEMS.map(item => ({
+  ...item,
+  image: getHDImageForDish(item.name)
+}));
