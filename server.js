@@ -197,7 +197,8 @@ app.post('/api/orders/sync', async (req, res) => {
 // --- SERVE STATIC FRONTEND FOR UNIFIED RENDER DEPLOYMENT ---
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('*', (req, res) => {
+// SPA Fallback (Catch-all for React Router)
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 // --- SOCKET.IO ---
