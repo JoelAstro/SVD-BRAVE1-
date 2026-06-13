@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import { MENU_ITEMS, PARCEL_ITEMS } from '../data/menuData';
 
 export interface Table {
@@ -174,10 +175,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return DEFAULT_TABLES;
   });
 
-  const [orders, setOrders] = useState<Order[]>(() => {
-    const stored = localStorage.getItem('svd_orders');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [orders, setOrders] = useState<Order[]>([]);
 
   const [invoices, setInvoices] = useState<Invoice[]>(() => {
     const stored = localStorage.getItem('svd_invoices');
@@ -231,6 +229,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const tablesRef = React.useRef(tables);
   const ordersRef = React.useRef(orders);
   const paymentNotificationsRef = React.useRef(paymentNotifications);
+
+
+  const socketRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    socketRef.current = io('http://localhost:3000');
+    
+    fetch('http://localhost:3000/api/orders')
+      .then(res => res.json())
+      .then(data => {
+        console.log('[Kitchen Fetch Response] Loaded initial orders from backend');
+        setOrders(data);
+      })
+      .catch(err => console.error('Failed to fetch orders:', err));
+
+    socketRef.current.on('new_order', (newOrder: Order) => {
+      console.log('[Realtime Events] Received new_order:', newOrder.id);
+      setOrders(prev => {
+        if (!prev.find(o => o.id === newOrder.id)) return [...prev, newOrder];
+        return prev;
+      });
+    });
+
+    socketRef.current.on('order_updated', (updatedOrder: Order) => {
+      console.log('[Realtime Events] Received order_updated:', updatedOrder.id);
+      setOrders(prev => prev.map(o => o.id === updatedOrder.id ? updatedOrder : o));
+    });
+
+    socketRef.current.on('orders_synced', (syncedOrders: Order[]) => {
+      setOrders(syncedOrders);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     tablesRef.current = tables;
@@ -341,7 +375,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (updated) {
         localStorage.setItem('svd_tables', JSON.stringify(newTables));
-        localStorage.setItem('svd_orders', JSON.stringify(parsedOrders));
+        fetch('http://localhost:3000/api/orders/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsedOrders) });
         localStorage.setItem('svd_recovery_audit_logs', JSON.stringify(auditLogs));
         setTables(newTables);
         setOrders(parsedOrders);
@@ -456,7 +490,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
         if (ordersUpdated) {
           setOrders(newOrders);
-          localStorage.setItem('svd_orders', JSON.stringify(newOrders));
+          fetch('http://localhost:3000/api/orders/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrders) });
         }
         if (newNotifications.length > 0) {
           setPaymentNotifications(prev => {
@@ -539,9 +573,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('svd_tables', JSON.stringify(tables));
   }, [tables]);
 
-  useEffect(() => {
-    localStorage.setItem('svd_orders', JSON.stringify(orders));
-  }, [orders]);
+
 
   useEffect(() => {
     localStorage.setItem('svd_invoices', JSON.stringify(invoices));
@@ -620,7 +652,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const handleSync = (e: MessageEvent) => {
       if (e.data === 'sync') {
         const storedTables = localStorage.getItem('svd_tables');
-        const storedOrders = localStorage.getItem('svd_orders');
         const storedInvoices = localStorage.getItem('svd_invoices');
         const storedUpi = localStorage.getItem('svd_upi_id');
         const storedQr = localStorage.getItem('svd_qr_url');
@@ -629,7 +660,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const storedParcelItems = localStorage.getItem('svd_parcel_items');
         
         if (storedTables) setTables(JSON.parse(storedTables));
-        if (storedOrders) setOrders(JSON.parse(storedOrders));
         if (storedInvoices) setInvoices(JSON.parse(storedInvoices));
         if (storedUpi) setUpiId(storedUpi);
         if (storedQr) setQrCodeUrl(storedQr);
@@ -824,13 +854,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       finalOrders = orders.map(o => {
         if (o.id === activeOrd.id) {
-          return {
+          const updatedOrder = {
             ...o,
             items: updatedItems,
-            status: 'PLACED' as const, // Reset status to PLACED so Kitchen board receives the alert for cooking additional dishes
+            status: 'PLACED' as const,
             timestamp: Date.now(),
             specialNotes: specialNotes || o.specialNotes
           };
+          fetch(`http://localhost:3000/api/orders/${updatedOrder.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedOrder)
+          });
+          return updatedOrder;
         }
         return o;
       });
@@ -858,6 +894,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         pickupTime
       };
 
+      fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newOrder)
+      });
       finalOrders = [...orders, newOrder];
 
       if (activeTable) {
@@ -870,7 +911,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     }
 
-    localStorage.setItem('svd_orders', JSON.stringify(finalOrders));
     localStorage.setItem('svd_tables', JSON.stringify(finalTables));
     setOrders(finalOrders);
     setTables(finalTables);
@@ -900,12 +940,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           });
         }
         
+        fetch(`http://localhost:3000/api/orders/${orderId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nextOrder)
+        });
         return nextOrder;
       }
       return o;
     });
 
-    localStorage.setItem('svd_orders', JSON.stringify(nextOrders));
     localStorage.setItem('svd_tables', JSON.stringify(nextTables));
     setOrders(nextOrders);
     setTables(nextTables);
@@ -943,11 +987,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     
     // Mark order as PAID
     const nextOrders = orders.map(o => {
-      if (o.id === orderId) return { ...o, status: 'PAID' as const };
+      if (o.id === orderId) {
+        const nextOrder = { ...o, status: 'PAID' as const };
+        fetch(`http://localhost:3000/api/orders/${orderId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nextOrder)
+        });
+        return nextOrder;
+      }
       return o;
     });
     setOrders(nextOrders);
-    localStorage.setItem('svd_orders', JSON.stringify(nextOrders));
 
     // Release table & set to AVAILABLE (Green)
     let nextTables = tables;
