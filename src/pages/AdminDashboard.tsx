@@ -727,15 +727,17 @@ const AdminDashboard: React.FC = () => {
                           dish.disabled ? 'bg-neutral-100/50 dark:bg-neutral-850/5 text-neutral-400' : ''
                         }`}
                       >
-                        <td className="p-4 flex items-center gap-3">
-                          <ImageWithFallback 
-                            src={dish.image} 
-                            alt={dish.name} 
-                            className={`w-10 h-10 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
-                          />
-                          <div>
-                            <h5 className="font-bold text-neutral-850 dark:text-neutral-100">{dish.name}</h5>
-                            <p className="text-[10px] text-neutral-400 line-clamp-1 max-w-[200px]">{dish.description}</p>
+                        <td className="p-4">
+                          <div className="flex items-center gap-3 w-full min-w-0">
+                            <ImageWithFallback 
+                              src={dish.image} 
+                              alt={dish.name} 
+                              className={`w-10 h-10 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0 ${dish.disabled ? 'grayscale' : ''}`} 
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h5 className="font-bold text-neutral-850 dark:text-neutral-100 truncate w-full">{dish.name}</h5>
+                              <p className="text-[10px] text-neutral-400 line-clamp-1 w-full">{dish.description}</p>
+                            </div>
                           </div>
                         </td>
                         <td className="p-4 text-neutral-600 dark:text-neutral-300 font-semibold">{dish.category}</td>
