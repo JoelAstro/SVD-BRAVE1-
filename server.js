@@ -65,6 +65,9 @@ app.post('/api/orders', async (req, res) => {
     return res.status(400).json({ error: 'Invalid order data' });
   }
 
+  // Instantly broadcast to all tabs first to guarantee real-time UI sync
+  io.emit('new-order', newOrder); 
+
   try {
     const createdOrder = await prisma.order.create({
       data: {
@@ -100,7 +103,6 @@ app.post('/api/orders', async (req, res) => {
       details: { orderId: createdOrder.id, tableNo: createdOrder.tableNo }
     });
 
-    io.emit('new_order', newOrder); // Emit the exact payload the frontend sent
     res.status(201).json({ message: 'Order created', order: newOrder });
 
   } catch (err) {
@@ -114,6 +116,9 @@ app.put('/api/orders/:id', async (req, res) => {
   const orderId = req.params.id;
   const updates = req.body;
   
+  // Instantly broadcast for real-time UI
+  io.emit('order_updated', updates);
+
   try {
     // Determine if we are updating items or just status
     if (updates.items) {
@@ -168,7 +173,6 @@ app.put('/api/orders/:id', async (req, res) => {
       }
     }
 
-    io.emit('order_updated', updates);
     res.json({ message: 'Order updated', order: updates });
 
   } catch (err) {

@@ -154,8 +154,6 @@ const DEFAULT_TABLES: Table[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const syncChannel = React.useMemo(() => new BroadcastChannel('svd_restaurant_sync'), []);
-
   // --- STATE ---
   const [tables, setTables] = useState<Table[]>(() => {
     const stored = localStorage.getItem('svd_tables');
@@ -234,18 +232,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const socketRef = React.useRef<any>(null);
 
   useEffect(() => {
-    socketRef.current = io(`http://${window.location.hostname}:3000`);
+    socketRef.current = io(`http://${window.location.hostname}:3000`, { 
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: Infinity
+    });
     
     fetch(`http://${window.location.hostname}:3000/api/orders`)
       .then(res => res.json())
       .then(data => {
-        console.log('[Kitchen Fetch Response] Loaded initial orders from backend');
-        setOrders(data);
+        if (Array.isArray(data)) {
+          console.log('[Kitchen Fetch Response] Loaded initial orders from backend');
+          setOrders(data);
+        } else {
+          console.warn('[Kitchen Fetch Response] Backend returned non-array:', data);
+        }
       })
       .catch(err => console.error('Failed to fetch orders:', err));
 
-    socketRef.current.on('new_order', (newOrder: Order) => {
-      console.log('[Realtime Events] Received new_order:', newOrder.id);
+    socketRef.current.on('new-order', (newOrder: Order) => {
+      console.log('[Realtime Events] Received new-order:', newOrder.id);
       setOrders(prev => {
         if (!prev.find(o => o.id === newOrder.id)) return [...prev, newOrder];
         return prev;
@@ -652,6 +658,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [menuItems]);
 
   // --- BROADCAST SYNC EVENTS ---
+  // We use BroadcastChannel to sync localStorage data (Tables, Menu, Invoices) across tabs instantly.
+  // We DO NOT sync Orders here because Orders are handled robustly via Socket.io events.
+  const syncChannel = React.useMemo(() => new BroadcastChannel('svd_restaurant_sync'), []);
+
   const triggerSync = () => {
     syncChannel.postMessage('sync');
   };
@@ -666,6 +676,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const storedRatings = localStorage.getItem('svd_ratings');
         const storedMenuItems = localStorage.getItem('svd_menu_items');
         const storedParcelItems = localStorage.getItem('svd_parcel_items');
+        const storedNotifications = localStorage.getItem('svd_payment_notifications');
         
         if (storedTables) setTables(JSON.parse(storedTables));
         if (storedInvoices) setInvoices(JSON.parse(storedInvoices));
@@ -674,8 +685,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (storedRatings) setRatings(JSON.parse(storedRatings));
         if (storedMenuItems) setMenuItems(JSON.parse(storedMenuItems));
         if (storedParcelItems) setParcelItems(JSON.parse(storedParcelItems));
-        const storedNotifications = localStorage.getItem('svd_payment_notifications');
         if (storedNotifications) setPaymentNotifications(JSON.parse(storedNotifications));
+
+        // Note: Orders are INTENTIONALLY ignored here. Socket.io 'new-order' handles them.
       }
     };
     syncChannel.addEventListener('message', handleSync);
@@ -789,7 +801,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const idx = prev.findIndex(c => c.id === item.id);
       if (idx > -1) {
         const next = [...prev];
-        next[idx].quantity += 1;
+        // Create a new object reference to avoid React StrictMode double mutation
+        next[idx] = { ...next[idx], quantity: next[idx].quantity + 1 };
         return next;
       }
       return [...prev, { ...item, quantity: 1 }];
@@ -809,13 +822,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (newQty <= 0 || (change < 0 && newQty < orderedQty)) {
         if (orderedQty > 0) {
-          next[idx].quantity = orderedQty;
+          // Create a new object reference
+          next[idx] = { ...next[idx], quantity: orderedQty };
           return next;
         }
         return prev.filter(c => c.id !== itemId);
       }
       
-      next[idx].quantity = newQty;
+      // Create a new object reference to avoid StrictMode double mutation
+      next[idx] = { ...next[idx], quantity: newQty };
       return next;
     });
   };

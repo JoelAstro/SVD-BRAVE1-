@@ -352,7 +352,7 @@ const MenuSection: React.FC = () => {
                           value={custName}
                           onChange={(e) => setCustName(e.target.value)}
                           placeholder="Customer Name"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-805 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                         />
                         <input 
                           type="tel" 
@@ -361,7 +361,7 @@ const MenuSection: React.FC = () => {
                           value={custPhone}
                           onChange={(e) => setCustPhone(e.target.value)}
                           placeholder="Mobile Number"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-805 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                         />
                       </form>
                     ) : (
@@ -375,7 +375,7 @@ const MenuSection: React.FC = () => {
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Special instructions (e.g. less spicy)..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-855 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs focus:border-maroon dark:focus:border-saffron outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                       disabled={!activeTable}
                     />
 
@@ -550,7 +550,7 @@ const MenuSection: React.FC = () => {
                           value={custName}
                           onChange={(e) => setCustName(e.target.value)}
                           placeholder="Customer Name"
-                          className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-805 text-xs outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                          className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                         />
                         <input 
                           type="tel" 
@@ -559,7 +559,7 @@ const MenuSection: React.FC = () => {
                           value={custPhone}
                           onChange={(e) => setCustPhone(e.target.value)}
                           placeholder="Mobile Number"
-                          className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-805 text-xs outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                          className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                         />
                       </div>
                     ) : (
@@ -573,7 +573,7 @@ const MenuSection: React.FC = () => {
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Special instructions (e.g. less spicy)..."
-                      className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-805 text-xs outline-none text-neutral-800 dark:text-neutral-100 font-medium"
+                      className="w-full px-3.5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-slate-800 text-xs outline-none text-neutral-800 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 font-medium transition-colors"
                       disabled={!activeTable}
                     />
 

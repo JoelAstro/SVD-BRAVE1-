@@ -27,7 +27,7 @@ const AdminDashboard: React.FC = () => {
     upiId, qrCodeUrl, ratings, menuItems, 
     updateUpiSettings, updateMenu, getAverageRating,
     paymentNotifications, dismissNotification, dismissAllNotifications,
-    parcelItems, updateParcelMenu
+    parcelItems, updateParcelMenu, releaseTable
   } = useApp();
 
   const [isAuthenticated, setIsAuthenticated] = useState(!!adminSession);
@@ -36,6 +36,18 @@ const AdminDashboard: React.FC = () => {
 
   const [reportType, setReportType] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [selectedQRTable, setSelectedQRTable] = useState<string>('G1');
+  
+  // Table Release States
+  const [selectedTableForRelease, setSelectedTableForRelease] = useState<string | null>(null);
+  const [showReleaseModal, setShowReleaseModal] = useState(false);
+
+  // Confirm Table Release
+  const confirmReleaseTable = () => {
+    if (!selectedTableForRelease) return;
+    releaseTable(selectedTableForRelease);
+    setShowReleaseModal(false);
+    setSelectedTableForRelease(null);
+  };
   
   // Menu Management States
   const [showDishModal, setShowDishModal] = useState(false);
@@ -517,7 +529,15 @@ const AdminDashboard: React.FC = () => {
                   return (
                     <div 
                       key={t.id}
-                      className={`py-3 text-center rounded-xl border font-bold text-xs shadow-inner flex flex-col items-center justify-center gap-0.5 select-none ${statusColor}`}
+                      onClick={() => {
+                        if (t.status === 'OCCUPIED' || t.status === 'PENDING') {
+                          setSelectedTableForRelease(t.number);
+                          setShowReleaseModal(true);
+                        }
+                      }}
+                      className={`py-3 text-center rounded-xl border font-bold text-xs shadow-inner flex flex-col items-center justify-center gap-0.5 select-none transition-transform duration-200 ${
+                        t.status !== 'AVAILABLE' ? 'cursor-pointer hover:scale-105 hover:shadow-md' : 'opacity-80'
+                      } ${statusColor}`}
                     >
                       <span>T-{t.number}</span>
                       <span className="text-[8px] font-semibold opacity-75">{t.capacity}S</span>
@@ -1422,6 +1442,54 @@ const AdminDashboard: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* --- TABLE RELEASE CONFIRMATION MODAL --- */}
+      {showReleaseModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white dark:bg-bg-dark border border-neutral-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden glass">
+            
+            <div className="flex items-center justify-between p-4 border-b border-neutral-100 dark:border-neutral-800">
+              <h3 className="font-logo font-extrabold text-neutral-800 dark:text-neutral-100 text-sm tracking-wide uppercase">
+                Force Release Table
+              </h3>
+              <button 
+                onClick={() => setShowReleaseModal(false)}
+                className="text-neutral-400 hover:text-rose-500 transition-colors p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="p-6 text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center mx-auto text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/50">
+                <span className="font-logo font-extrabold text-xl">T-{selectedTableForRelease}</span>
+              </div>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 font-medium leading-relaxed">
+                Are you sure you want to forcibly release <strong className="text-neutral-900 dark:text-white">Table {selectedTableForRelease}</strong> back to Available?
+              </p>
+              <p className="text-[10px] text-rose-500 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 px-3 py-2 rounded-lg font-semibold">
+                Warning: This clears any active booking immediately!
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-neutral-50 dark:bg-neutral-900/50 border-t border-neutral-100 dark:border-neutral-800">
+              <button 
+                onClick={() => setShowReleaseModal(false)}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmReleaseTable}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 shadow-md shadow-rose-600/20 transition-all"
+              >
+                Action: Release Table
+              </button>
+            </div>
+
           </div>
         </div>
       )}
