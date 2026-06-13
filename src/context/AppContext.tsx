@@ -232,13 +232,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const socketRef = React.useRef<any>(null);
 
   useEffect(() => {
-    socketRef.current = io(`http://${window.location.hostname}:3000`, { 
+    socketRef.current = io(isDev ? `http://${window.location.hostname}:3000` : undefined, { 
       transports: ['websocket'],
       reconnection: true,
       reconnectionAttempts: Infinity
     });
     
-    fetch(`http://${window.location.hostname}:3000/api/orders`)
+    fetch(`${API_URL}/api/orders`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -389,7 +389,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       if (updated) {
         localStorage.setItem('svd_tables', JSON.stringify(newTables));
-        fetch(`http://${window.location.hostname}:3000/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsedOrders) });
+        fetch(`${API_URL}/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsedOrders) });
         localStorage.setItem('svd_recovery_audit_logs', JSON.stringify(auditLogs));
         setTables(newTables);
         setOrders(parsedOrders);
@@ -504,7 +504,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
         if (ordersUpdated) {
           setOrders(newOrders);
-          fetch(`http://${window.location.hostname}:3000/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrders) });
+          fetch(`${API_URL}/api/orders/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrders) });
         }
         if (newNotifications.length > 0) {
           setPaymentNotifications(prev => {
@@ -660,7 +660,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // --- BROADCAST SYNC EVENTS ---
   // We use BroadcastChannel to sync localStorage data (Tables, Menu, Invoices) across tabs instantly.
   // We DO NOT sync Orders here because Orders are handled robustly via Socket.io events.
+
   const syncChannel = React.useMemo(() => new BroadcastChannel('svd_restaurant_sync'), []);
+
+  // Determine API URL based on environment (Vite dev port vs unified production)
+  const isDev = window.location.port === '5173' || window.location.port === '5174';
+  const API_URL = isDev ? `http://${window.location.hostname}:3000` : '';
+
 
   const triggerSync = () => {
     syncChannel.postMessage('sync');
@@ -884,7 +890,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             timestamp: Date.now(),
             specialNotes: specialNotes || o.specialNotes
           };
-          fetch(`http://${window.location.hostname}:3000/api/orders/${updatedOrder.id}`, {
+          fetch(`${API_URL}/api/orders/${updatedOrder.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedOrder)
@@ -917,7 +923,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         pickupTime
       };
 
-      fetch(`http://${window.location.hostname}:3000/api/orders`, {
+      fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newOrder)
@@ -963,7 +969,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           });
         }
         
-        fetch(`http://${window.location.hostname}:3000/api/orders/${orderId}`, {
+        fetch(`${API_URL}/api/orders/${orderId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(nextOrder)
@@ -1012,7 +1018,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const nextOrders = orders.map(o => {
       if (o.id === orderId) {
         const nextOrder = { ...o, status: 'PAID' as const };
-        fetch(`http://${window.location.hostname}:3000/api/orders/${orderId}`, {
+        fetch(`${API_URL}/api/orders/${orderId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(nextOrder)
