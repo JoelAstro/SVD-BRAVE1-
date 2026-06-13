@@ -1,5 +1,11 @@
 import express from 'express';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -188,7 +194,12 @@ app.post('/api/orders/sync', async (req, res) => {
   res.json({ message: 'Sync broadcasted' });
 });
 
+// --- SERVE STATIC FRONTEND FOR UNIFIED RENDER DEPLOYMENT ---
+app.use(express.static(path.join(__dirname, 'dist')));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 // --- SOCKET.IO ---
 io.on('connection', (socket) => {
   console.log(`[Realtime Events] Client connected: ${socket.id}`);
