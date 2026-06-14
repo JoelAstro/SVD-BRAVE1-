@@ -141,7 +141,8 @@ const AuthGate: React.FC<AuthGateProps> = ({ role, onSuccess }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={role === 'admin' ? 'joelramireddy@gmail.com' : 'pardhusadhu5@gmail.com'}
+                  placeholder="Enter your email"
+                  autoComplete="off"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-sm focus:border-maroon dark:focus:border-saffron outline-none transition-all"
                 />
               </div>
@@ -160,6 +161,7 @@ const AuthGate: React.FC<AuthGateProps> = ({ role, onSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="new-password"
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-sm focus:border-maroon dark:focus:border-saffron outline-none transition-all"
                 />
                 <button 
@@ -204,7 +206,8 @@ const AuthGate: React.FC<AuthGateProps> = ({ role, onSuccess }) => {
                 required
                 value={forgotEmail}
                 onChange={(e) => setForgotEmail(e.target.value)}
-                placeholder={role === 'admin' ? 'joelramireddy@gmail.com' : 'pardhusadhu5@gmail.com'}
+                placeholder="Enter your email"
+                autoComplete="off"
                 className="w-full px-4 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-sm focus:border-maroon dark:focus:border-saffron outline-none"
               />
               <div className="flex gap-2 justify-end mt-4">
