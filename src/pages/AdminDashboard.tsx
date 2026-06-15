@@ -317,12 +317,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Apply cache busting to the image URL to prevent browser caching stale images
-    let finalImageUrl = dishForm.image.trim();
-    if (finalImageUrl) {
-      const cleanUrl = finalImageUrl.split('?')[0];
-      finalImageUrl = `${cleanUrl}?v=${Date.now()}`;
-    }
+    const finalImageUrl = dishForm.image.trim();
 
     const finalForm = {
       ...dishForm,
