@@ -36,8 +36,8 @@ const MenuSection: React.FC = () => {
 
   // Filter menu dynamically based on search and category selection
   const filteredMenu = menuItems.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || 
-                          item.description.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = (item.name || '').toLowerCase().includes(search.toLowerCase()) || 
+                          (item.description || '').toLowerCase().includes(search.toLowerCase());
     const matchesCat = selectedCategory === 'All' || item.category === selectedCategory;
     return matchesSearch && matchesCat;
   });

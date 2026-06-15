@@ -305,7 +305,7 @@ const AdminDashboard: React.FC = () => {
       category: dish.category,
       type: dish.type,
       description: dish.description || '',
-      image: dish.image ? dish.image.split('?')[0] : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=300'
+      image: dish.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=300'
     });
     setShowDishModal(true);
   };
@@ -1376,13 +1376,13 @@ const AdminDashboard: React.FC = () => {
                               key={idx}
                               onClick={() => setDishForm(prev => ({ ...prev, image: url }))}
                               className={`relative cursor-pointer w-14 h-14 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all ${
-                                dishForm.image.split('?')[0] === url.split('?')[0] 
+                                (dishForm.image || '').split('?')[0] === url.split('?')[0] 
                                   ? 'border-maroon dark:border-saffron scale-95' 
                                   : 'border-neutral-250 dark:border-neutral-750'
                               }`}
                             >
                               <img src={url} alt="HD Suggestion" className="w-full h-full object-cover" />
-                              {dishForm.image.split('?')[0] === url.split('?')[0] && (
+                              {(dishForm.image || '').split('?')[0] === url.split('?')[0] && (
                                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center text-[10px] text-white font-bold">
                                   ✓
                                 </div>

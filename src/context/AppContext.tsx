@@ -208,15 +208,47 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return stored ? JSON.parse(stored) : [];
   });
 
-  const [menuItems, setMenuItems] = useState<any[]>(() => {
+  const [menuItems, _setMenuItems] = useState<any[]>(() => {
     const stored = localStorage.getItem('svd_menu_items');
-    return stored ? JSON.parse(stored) : MENU_ITEMS;
+    const parsed = stored ? JSON.parse(stored) : MENU_ITEMS;
+    const uniqueMap = new Map();
+    parsed.forEach((item: any) => {
+      if (item && item.id) uniqueMap.set(item.id, item);
+    });
+    return Array.from(uniqueMap.values());
   });
 
-  const [parcelItems, setParcelItems] = useState<any[]>(() => {
+  const setMenuItems = (val: any[] | ((prev: any[]) => any[])) => {
+    _setMenuItems(prev => {
+      const resolved = typeof val === 'function' ? val(prev) : val;
+      const uniqueMap = new Map();
+      resolved.forEach((item: any) => {
+        if (item && item.id) uniqueMap.set(item.id, item);
+      });
+      return Array.from(uniqueMap.values());
+    });
+  };
+
+  const [parcelItems, _setParcelItems] = useState<any[]>(() => {
     const stored = localStorage.getItem('svd_parcel_items');
-    return stored ? JSON.parse(stored) : PARCEL_ITEMS;
+    const parsed = stored ? JSON.parse(stored) : PARCEL_ITEMS;
+    const uniqueMap = new Map();
+    parsed.forEach((item: any) => {
+      if (item && item.id) uniqueMap.set(item.id, item);
+    });
+    return Array.from(uniqueMap.values());
   });
+
+  const setParcelItems = (val: any[] | ((prev: any[]) => any[])) => {
+    _setParcelItems(prev => {
+      const resolved = typeof val === 'function' ? val(prev) : val;
+      const uniqueMap = new Map();
+      resolved.forEach((item: any) => {
+        if (item && item.id) uniqueMap.set(item.id, item);
+      });
+      return Array.from(uniqueMap.values());
+    });
+  };
 
   const [activeTable, setActiveTable] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -377,7 +409,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (e.key === 'svd_menu_items' && e.newValue) {
         console.log('[Storage Event] Dine-in menu items updated in another tab');
         try {
-          setMenuItems(JSON.parse(e.newValue));
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            const uniqueMap = new Map();
+            parsed.forEach((item: any) => {
+              if (item && item.id) uniqueMap.set(item.id, item);
+            });
+            setMenuItems(Array.from(uniqueMap.values()));
+          }
         } catch (err) {
           console.error('[Storage Event] Failed to parse menu items:', err);
         }
@@ -385,7 +424,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (e.key === 'svd_parcel_items' && e.newValue) {
         console.log('[Storage Event] Parcel menu items updated in another tab');
         try {
-          setParcelItems(JSON.parse(e.newValue));
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            const uniqueMap = new Map();
+            parsed.forEach((item: any) => {
+              if (item && item.id) uniqueMap.set(item.id, item);
+            });
+            setParcelItems(Array.from(uniqueMap.values()));
+          }
         } catch (err) {
           console.error('[Storage Event] Failed to parse parcel items:', err);
         }
@@ -823,14 +869,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const storedParcelItems = localStorage.getItem('svd_parcel_items');
         const storedNotifications = localStorage.getItem('svd_payment_notifications');
         
-        if (storedTables) setTables(JSON.parse(storedTables));
-        if (storedInvoices) setInvoices(JSON.parse(storedInvoices));
-        if (storedUpi) setUpiId(storedUpi);
-        if (storedQr) setQrCodeUrl(storedQr);
-        if (storedRatings) setRatings(JSON.parse(storedRatings));
-        if (storedMenuItems) setMenuItems(JSON.parse(storedMenuItems));
-        if (storedParcelItems) setParcelItems(JSON.parse(storedParcelItems));
-        if (storedNotifications) setPaymentNotifications(JSON.parse(storedNotifications));
+        try {
+          if (storedTables) setTables(JSON.parse(storedTables));
+          if (storedInvoices) setInvoices(JSON.parse(storedInvoices));
+          if (storedUpi) setUpiId(storedUpi);
+          if (storedQr) setQrCodeUrl(storedQr);
+          if (storedRatings) setRatings(JSON.parse(storedRatings));
+          if (storedNotifications) setPaymentNotifications(JSON.parse(storedNotifications));
+
+          if (storedMenuItems) {
+            const parsed = JSON.parse(storedMenuItems);
+            if (Array.isArray(parsed)) {
+              const uniqueMap = new Map();
+              parsed.forEach((item: any) => {
+                if (item && item.id) uniqueMap.set(item.id, item);
+              });
+              setMenuItems(Array.from(uniqueMap.values()));
+            }
+          }
+          if (storedParcelItems) {
+            const parsed = JSON.parse(storedParcelItems);
+            if (Array.isArray(parsed)) {
+              const uniqueMap = new Map();
+              parsed.forEach((item: any) => {
+                if (item && item.id) uniqueMap.set(item.id, item);
+              });
+              setParcelItems(Array.from(uniqueMap.values()));
+            }
+          }
+        } catch (err) {
+          console.error('[Broadcast Sync] Failed to parse synced states:', err);
+        }
 
         // Note: Orders are INTENTIONALLY ignored here. Socket.io 'new-order' handles them.
       }
@@ -929,8 +998,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateMenu = (newMenu: any[]) => {
+    // Deduplicate by ID to guarantee no duplicates enter the state
+    const uniqueMap = new Map();
+    newMenu.forEach(item => {
+      if (item && item.id) uniqueMap.set(item.id, item);
+    });
+    const cleanMenu = Array.from(uniqueMap.values());
+
     // 1. Detect and sync added/updated items
-    newMenu.forEach(newItem => {
+    cleanMenu.forEach(newItem => {
       const currentItem = menuItems.find(m => m.id === newItem.id);
       let shouldSync = false;
       if (currentItem) {
@@ -959,7 +1035,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 2. Detect and sync deleted items
     menuItems.forEach(oldItem => {
-      const exists = newMenu.some(newItem => newItem.id === oldItem.id);
+      const exists = cleanMenu.some(newItem => newItem.id === oldItem.id);
       if (!exists) {
         console.log(`[AppContext] Menu item ${oldItem.id} deleted. Syncing to backend...`);
         fetch(`${API_URL}/api/menu/${oldItem.id}`, {
@@ -968,14 +1044,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
 
-    localStorage.setItem('svd_menu_items', JSON.stringify(newMenu));
-    setMenuItems(newMenu);
+    localStorage.setItem('svd_menu_items', JSON.stringify(cleanMenu));
+    setMenuItems(cleanMenu);
     triggerSync();
   };
 
   const updateParcelMenu = (newMenu: any[]) => {
+    // Deduplicate by ID to guarantee no duplicates enter the state
+    const uniqueMap = new Map();
+    newMenu.forEach(item => {
+      if (item && item.id) uniqueMap.set(item.id, item);
+    });
+    const cleanMenu = Array.from(uniqueMap.values());
+
     // 1. Detect and sync added/updated items
-    newMenu.forEach(newItem => {
+    cleanMenu.forEach(newItem => {
       const currentItem = parcelItems.find(p => p.id === newItem.id);
       let shouldSync = false;
       if (currentItem) {
@@ -1004,7 +1087,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 2. Detect and sync deleted items
     parcelItems.forEach(oldItem => {
-      const exists = newMenu.some(newItem => newItem.id === oldItem.id);
+      const exists = cleanMenu.some(newItem => newItem.id === oldItem.id);
       if (!exists) {
         console.log(`[AppContext] Takeaway item ${oldItem.id} deleted. Syncing to backend...`);
         fetch(`${API_URL}/api/menu/${oldItem.id}`, {
@@ -1013,8 +1096,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
 
-    localStorage.setItem('svd_parcel_items', JSON.stringify(newMenu));
-    setParcelItems(newMenu);
+    localStorage.setItem('svd_parcel_items', JSON.stringify(cleanMenu));
+    setParcelItems(cleanMenu);
     triggerSync();
   };
 
