@@ -331,27 +331,37 @@ app.put('/api/menu/:id', async (req, res) => {
   console.log(`[Realtime Events] Emitting menu_item_updated for ID ${itemId}:`, updateData);
   io.emit('menu_item_updated', { id: itemId, ...updateData });
 
-  // 2. Try updating PostgreSQL via Prisma (only schema fields)
+  // 2. Try updating/creating PostgreSQL via Prisma
   let dbSuccess = false;
   try {
-    const prismaData = {};
-    if (updateData.name !== undefined) prismaData.name = updateData.name;
-    if (updateData.price !== undefined) prismaData.price = parseFloat(updateData.price);
-    if (updateData.category !== undefined) prismaData.category = updateData.category;
-    if (updateData.type !== undefined) prismaData.type = updateData.type;
-    if (updateData.image !== undefined) prismaData.image = updateData.image;
-    if (updateData.description !== undefined) prismaData.description = updateData.description;
+    const prismaData = {
+      name: updateData.name || '',
+      price: parseFloat(updateData.price || 0),
+      category: updateData.category || '',
+      type: updateData.type || 'veg',
+      image: updateData.image || '',
+      description: updateData.description || ''
+    };
 
-    if (Object.keys(prismaData).length > 0) {
+    const existing = await prisma.menuItem.findUnique({ where: { id: itemId } });
+    if (existing) {
       await prisma.menuItem.update({
         where: { id: itemId },
         data: prismaData
       });
       console.log(`[Database] Updated menu item ${itemId} in PostgreSQL.`);
-      dbSuccess = true;
+    } else {
+      await prisma.menuItem.create({
+        data: {
+          id: itemId,
+          ...prismaData
+        }
+      });
+      console.log(`[Database] Created new menu item ${itemId} in PostgreSQL.`);
     }
+    dbSuccess = true;
   } catch (err) {
-    console.warn(`[Database] Failed to update PostgreSQL for item ${itemId} (using file fallback):`, err.message);
+    console.warn(`[Database] Failed to upsert PostgreSQL for item ${itemId} (using file fallback):`, err.message);
   }
 
   // 3. Update the local menu.json file
@@ -378,16 +388,76 @@ app.put('/api/menu/:id', async (req, res) => {
       });
     }
 
+    if (!updated) {
+      // It's a new item! Appending to correct array
+      const newItem = { id: itemId, ...updateData };
+      if (['Couple Pack', 'Family Pack', 'Bucket Biryani'].includes(updateData.category)) {
+        menuData.takeaway.push(newItem);
+      } else {
+        menuData.dineIn.push(newItem);
+      }
+      updated = true;
+      console.log(`[File System] Appended new menu item ${itemId} to menu.json.`);
+    }
+
     if (updated) {
       fs.writeFileSync(menuPath, JSON.stringify(menuData, null, 2), 'utf8');
-      console.log(`[File System] Updated menu item ${itemId} in menu.json.`);
+      console.log(`[File System] Saved updated menu in menu.json.`);
     }
   } catch (err) {
     console.error('[File System] Failed to update menu.json:', err);
   }
 
-  res.json({ success: true, message: 'Menu item updated successfully', dbSync: dbSuccess });
+  res.json({ success: true, message: 'Menu item updated/upserted successfully', dbSync: dbSuccess });
 });
+
+// Delete menu item (with DB write, JSON backup and Socket.io live broadcast)
+app.delete('/api/menu/:id', async (req, res) => {
+  const { id } = req.params;
+  const itemId = parseInt(id);
+
+  // 1. Broadcast the deletion in real-time instantly via Socket.io to all clients
+  console.log(`[Realtime Events] Emitting menu_item_deleted for ID ${itemId}`);
+  io.emit('menu_item_deleted', { id: itemId });
+
+  let dbSuccess = false;
+  // 2. Try deleting from PostgreSQL via Prisma
+  try {
+    await prisma.menuItem.delete({
+      where: { id: itemId }
+    });
+    console.log(`[Database] Deleted menu item ${itemId} from PostgreSQL.`);
+    dbSuccess = true;
+  } catch (err) {
+    console.warn(`[Database] Failed to delete from PostgreSQL for item ${itemId} (using file fallback):`, err.message);
+  }
+
+  // 3. Update local menu.json file
+  try {
+    const menuPath = path.join(__dirname, 'menu.json');
+    const menuData = JSON.parse(fs.readFileSync(menuPath, 'utf8'));
+    
+    const originalLengthDineIn = menuData.dineIn.length;
+    menuData.dineIn = menuData.dineIn.filter(item => item.id !== itemId);
+    
+    let deleted = menuData.dineIn.length < originalLengthDineIn;
+    if (!deleted) {
+      const originalLengthTakeaway = menuData.takeaway.length;
+      menuData.takeaway = menuData.takeaway.filter(item => item.id !== itemId);
+      deleted = menuData.takeaway.length < originalLengthTakeaway;
+    }
+
+    if (deleted) {
+      fs.writeFileSync(menuPath, JSON.stringify(menuData, null, 2), 'utf8');
+      console.log(`[File System] Deleted menu item ${itemId} in menu.json.`);
+    }
+  } catch (err) {
+    console.error('[File System] Failed to update menu.json on delete:', err);
+  }
+
+  res.json({ success: true, message: 'Menu item deleted successfully', dbSync: dbSuccess });
+});
+
 
 // --- SERVE STATIC FRONTEND FOR UNIFIED RENDER DEPLOYMENT ---
 app.use(express.static(path.join(__dirname, 'dist')));

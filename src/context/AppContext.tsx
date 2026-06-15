@@ -297,39 +297,65 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     socketRef.current.on('menu_item_image_updated', (data: { id: number, image: string }) => {
       console.log('[Realtime Events] Received menu_item_image_updated:', data.id, '->', data.image);
-      setMenuItems(prev => prev.map(m => m.id === data.id ? { ...m, image: data.image } : m));
-      setParcelItems(prev => prev.map(p => p.id === data.id ? { ...p, image: data.image } : p));
-      
-      const storedDineIn = localStorage.getItem('svd_menu_items');
-      const storedTakeaway = localStorage.getItem('svd_parcel_items');
-      if (storedDineIn) {
-        const parsed = JSON.parse(storedDineIn);
-        const updated = parsed.map((m: any) => m.id === data.id ? { ...m, image: data.image } : m);
-        localStorage.setItem('svd_menu_items', JSON.stringify(updated));
-      }
-      if (storedTakeaway) {
-        const parsed = JSON.parse(storedTakeaway);
-        const updated = parsed.map((p: any) => p.id === data.id ? { ...p, image: data.image } : p);
-        localStorage.setItem('svd_parcel_items', JSON.stringify(updated));
-      }
+      setMenuItems(prev => {
+        const next = prev.map(m => m.id === data.id ? { ...m, image: data.image } : m);
+        localStorage.setItem('svd_menu_items', JSON.stringify(next));
+        return next;
+      });
+      setParcelItems(prev => {
+        const next = prev.map(p => p.id === data.id ? { ...p, image: data.image } : p);
+        localStorage.setItem('svd_parcel_items', JSON.stringify(next));
+        return next;
+      });
     });
 
     socketRef.current.on('menu_item_updated', (data: any) => {
       console.log('[Realtime Events] Received menu_item_updated:', data.id, data);
-      const updateFn = (prev: any[]) => prev.map(item => item.id === data.id ? { ...item, ...data } : item);
-      setMenuItems(prev => updateFn(prev));
-      setParcelItems(prev => updateFn(prev));
+      const isParcel = ['Couple Pack', 'Family Pack', 'Bucket Biryani'].includes(data.category);
       
-      const storedDineIn = localStorage.getItem('svd_menu_items');
-      const storedTakeaway = localStorage.getItem('svd_parcel_items');
-      if (storedDineIn) {
-        const parsed = JSON.parse(storedDineIn);
-        localStorage.setItem('svd_menu_items', JSON.stringify(updateFn(parsed)));
+      if (isParcel) {
+        setParcelItems(prev => {
+          const exists = prev.some(item => item.id === data.id);
+          const next = exists 
+            ? prev.map(item => item.id === data.id ? { ...item, ...data } : item)
+            : [...prev, data];
+          localStorage.setItem('svd_parcel_items', JSON.stringify(next));
+          return next;
+        });
+        setMenuItems(prev => {
+          const next = prev.filter(item => item.id !== data.id);
+          localStorage.setItem('svd_menu_items', JSON.stringify(next));
+          return next;
+        });
+      } else {
+        setMenuItems(prev => {
+          const exists = prev.some(item => item.id === data.id);
+          const next = exists 
+            ? prev.map(item => item.id === data.id ? { ...item, ...data } : item)
+            : [...prev, data];
+          localStorage.setItem('svd_menu_items', JSON.stringify(next));
+          return next;
+        });
+        setParcelItems(prev => {
+          const next = prev.filter(item => item.id !== data.id);
+          localStorage.setItem('svd_parcel_items', JSON.stringify(next));
+          return next;
+        });
       }
-      if (storedTakeaway) {
-        const parsed = JSON.parse(storedTakeaway);
-        localStorage.setItem('svd_parcel_items', JSON.stringify(updateFn(parsed)));
-      }
+    });
+
+    socketRef.current.on('menu_item_deleted', (data: { id: number }) => {
+      console.log('[Realtime Events] Received menu_item_deleted:', data.id);
+      setMenuItems(prev => {
+        const next = prev.filter(item => item.id !== data.id);
+        localStorage.setItem('svd_menu_items', JSON.stringify(next));
+        return next;
+      });
+      setParcelItems(prev => {
+        const next = prev.filter(item => item.id !== data.id);
+        localStorage.setItem('svd_parcel_items', JSON.stringify(next));
+        return next;
+      });
     });
 
     socketRef.current.on('new_notification', (notification: PaymentNotification) => {
@@ -903,10 +929,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateMenu = (newMenu: any[]) => {
+    // 1. Detect and sync added/updated items
     newMenu.forEach(newItem => {
       const currentItem = menuItems.find(m => m.id === newItem.id);
+      let shouldSync = false;
       if (currentItem) {
-        const hasChanged = 
+        shouldSync = 
           currentItem.name !== newItem.name ||
           currentItem.price !== newItem.price ||
           currentItem.category !== newItem.category ||
@@ -914,15 +942,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           currentItem.image !== newItem.image ||
           currentItem.description !== newItem.description ||
           currentItem.disabled !== newItem.disabled;
+      } else {
+        // It's a new item!
+        shouldSync = true;
+      }
 
-        if (hasChanged) {
-          console.log(`[AppContext] Menu item ${newItem.id} updated. Syncing to backend...`);
-          fetch(`${API_URL}/api/menu/${newItem.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newItem)
-          }).catch(err => console.error('Failed to sync menu update to backend:', err));
-        }
+      if (shouldSync) {
+        console.log(`[AppContext] Menu item ${newItem.id} updated/added. Syncing to backend...`);
+        fetch(`${API_URL}/api/menu/${newItem.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newItem)
+        }).catch(err => console.error('Failed to sync menu update to backend:', err));
+      }
+    });
+
+    // 2. Detect and sync deleted items
+    menuItems.forEach(oldItem => {
+      const exists = newMenu.some(newItem => newItem.id === oldItem.id);
+      if (!exists) {
+        console.log(`[AppContext] Menu item ${oldItem.id} deleted. Syncing to backend...`);
+        fetch(`${API_URL}/api/menu/${oldItem.id}`, {
+          method: 'DELETE'
+        }).catch(err => console.error('Failed to sync menu delete to backend:', err));
       }
     });
 
@@ -932,10 +974,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateParcelMenu = (newMenu: any[]) => {
+    // 1. Detect and sync added/updated items
     newMenu.forEach(newItem => {
       const currentItem = parcelItems.find(p => p.id === newItem.id);
+      let shouldSync = false;
       if (currentItem) {
-        const hasChanged = 
+        shouldSync = 
           currentItem.name !== newItem.name ||
           currentItem.price !== newItem.price ||
           currentItem.category !== newItem.category ||
@@ -943,15 +987,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           currentItem.image !== newItem.image ||
           currentItem.description !== newItem.description ||
           currentItem.disabled !== newItem.disabled;
+      } else {
+        // It's a new item!
+        shouldSync = true;
+      }
 
-        if (hasChanged) {
-          console.log(`[AppContext] Takeaway item ${newItem.id} updated. Syncing to backend...`);
-          fetch(`${API_URL}/api/menu/${newItem.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newItem)
-          }).catch(err => console.error('Failed to sync parcel update to backend:', err));
-        }
+      if (shouldSync) {
+        console.log(`[AppContext] Takeaway item ${newItem.id} updated/added. Syncing to backend...`);
+        fetch(`${API_URL}/api/menu/${newItem.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newItem)
+        }).catch(err => console.error('Failed to sync parcel update to backend:', err));
+      }
+    });
+
+    // 2. Detect and sync deleted items
+    parcelItems.forEach(oldItem => {
+      const exists = newMenu.some(newItem => newItem.id === oldItem.id);
+      if (!exists) {
+        console.log(`[AppContext] Takeaway item ${oldItem.id} deleted. Syncing to backend...`);
+        fetch(`${API_URL}/api/menu/${oldItem.id}`, {
+          method: 'DELETE'
+        }).catch(err => console.error('Failed to sync parcel delete to backend:', err));
       }
     });
 

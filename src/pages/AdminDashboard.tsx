@@ -706,7 +706,7 @@ const AdminDashboard: React.FC = () => {
             ) : (
               filteredMenuItems.map(dish => (
                 <div 
-                  key={dish.id} 
+                  key={`${menuSubTab}-${dish.id}`} 
                   className={`bg-white dark:bg-bg-dark border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full relative group ${
                     dish.disabled 
                       ? 'border-neutral-200/50 dark:border-neutral-800/60 opacity-75' 

@@ -126,7 +126,7 @@ const MenuSection: React.FC = () => {
 
               return (
                 <div 
-                  key={item.id}
+                  key={`menu-${item.id}`}
                   className={`flex flex-col justify-between bg-white dark:bg-neutral-900/60 rounded-3xl border border-neutral-200/50 dark:border-neutral-800/70 overflow-hidden shadow-sm hover:shadow-lg hover:border-maroon/15 dark:hover:border-saffron/20 transition-all duration-300 relative group cursor-pointer ${item.disabled ? 'opacity-55 select-none' : ''}`}
                   onClick={() => !item.disabled && setSelectedItemDetails(item)}
                 >
