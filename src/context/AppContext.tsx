@@ -781,9 +781,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Note: isDev and API_URL are defined at the top of AppProvider for clean scoping
 
 
-  const triggerSync = () => {
+  function triggerSync() {
     syncChannel.postMessage('sync');
-  };
+  }
 
   useEffect(() => {
     const handleSync = (e: MessageEvent) => {
